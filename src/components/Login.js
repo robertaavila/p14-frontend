@@ -5,8 +5,8 @@ import 'bulma/css/bulma.css'
 
 const Wrapper = () => (
     <div>
-        <Header />
-        <Auth />
+        <Header/>
+        <Auth/>
     </div>
 );
 
@@ -31,28 +31,34 @@ class Auth extends React.Component {
         authenticated: false
     }
 
-    loginWithEmailAndPassword = () => { this.setState({ authenticated: true }) }
+    loginWithEmailAndPassword = () => {
+        this.setState({authenticated: true})
+    }
 
-    loginWithProvider = () => { this.setState({ authenticated: true }) }
+    loginWithProvider = () => {
+        this.setState({authenticated: true})
+    }
 
-    handleClose = () => { this.setState({ authenticated: false }) }
+    handleClose = () => {
+        this.setState({authenticated: false})
+    }
 
     render() {
-        return(
+        return (
             <section className="section">
 
-                <LoginForm handleSubmit={this.loginWithEmailAndPassword} />
+                <LoginForm handleSubmit={this.loginWithEmailAndPassword}/>
 
-                <SignInSuccess active={this.state.authenticated} handleClose={this.handleClose} />
+                <SignInSuccess active={this.state.authenticated} handleClose={this.handleClose}/>
 
             </section>
         )
     }
 }
 
-const LoginButton = ({ icon, name, onClick }) => (
+const LoginButton = ({icon, name, onClick}) => (
     <div className="field">
-        <p className="control button is-medium" style={{ width: '300px' }} onClick={onClick}>
+        <p className="control button is-medium" style={{width: '300px'}} onClick={onClick}>
       <span className="icon">
         <i className={`fa fa-${icon}`} aria-hidden="true"></i>
       </span>
@@ -68,44 +74,73 @@ class LoginForm extends React.Component {
         password: null
     }
 
-    handleChange = (event) => this.setState({ [event.target.name]: event.target.value })
+    handleChange = (event) => this.setState({[event.target.name]: event.target.value})
 
     handleSubmit = () => this.props.handleSubmit(this.state)
 
     render() {
         return (
-            <div className="container has-text-centered box" style={{ maxWidth: '300px' }}>
-                <form
-                    onSubmit={e => {
-                        e.preventDefault();
-                        this.handleSubmit();
-                    }}>
-                    <div className="field">
-                        <label className="label" htmlFor="email">Email</label>
-                        <div className="control">
-                            <input className="input" name="email" type="email" placeholder="email" required onChange={this.handleChange} />
+            <section>
+                <div className="container has-text-centered box" style={{maxWidth: '500px'}}>
+                    <h1 className="title">Bem vindo</h1>
+                    <h2 className="subtitle">Validação de atividades complementares SESI SENAI </h2>
+                    <form
+                        onSubmit={e => {
+                            e.preventDefault();
+                            this.handleSubmit();
+                        }}>
+                        <div className="field">
+                            <label className="label" htmlFor="email">Email</label>
+                            <div className="control">
+                                <input className="input" name="email" type="email" placeholder="email" required
+                                       onChange={this.handleChange}/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="field">
-                        <label className="label" htmlFor="password">Password</label>
-                        <div className="control">
-                            <input className="input" name="password" type="password" placeholder="password" required onChange={this.handleChange}/>
+                        <div className="field">
+                            <label className="label" htmlFor="password">Senha</label>
+                            <div className="control">
+                                <input className="input" name="password" type="password" placeholder="senha" required
+                                       onChange={this.handleChange}/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="field">
-                        <div className="control buttons is-centered">
-                            <input className="button is-medium is-fullwidth green" type="submit" value="Sign In" />
+                        <div className="field">
+                            <div className="control buttons is-centered">
+                                <input className="button is-medium is-fullwidth green" type="submit" value="Entrar"/>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                    <p>Esqueceu sua senha?</p>
+                </div>
+                <div className="container has-text-centered box" style={{maxWidth: '400px'}}>
+
+                    <a
+                        className="Login-link"
+                        href="https://www.in.gov.br/materia/-/asset_publisher/Kujrw0TZC2Mb/content/id/55640393/do1-2018-12-18-resolucao-n-5-de-17-de-dezembro-de-2018-55640113"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <h2>
+                            MEC - Definição de Atividades Complementares
+                        </h2>
+                    </a>
+                    <a
+                        className="Login-link"
+                        href="https://drive.google.com/file/d/1FkN2SYad77Zp_Vqmlh8qXp754cWJ6CG-/view?usp=sharing"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <h2>SENAI - Regulamento de Atividades Complementares</h2>
+                    </a>
+                </div>
+
+            </section>
         );
     }
 }
 
-const SignInSuccess = ({ active, handleClose }) => (
+const SignInSuccess = ({active, handleClose}) => (
     <div className={`modal ${active && 'is-active'}`}>
         <div className="modal-background" onClick={handleClose}></div>
         <div className="modal-content">
@@ -123,4 +158,4 @@ const SignInSuccess = ({ active, handleClose }) => (
     </div>
 );
 
-export { Auth, LoginForm } ;
+export {Auth, LoginForm} ;
