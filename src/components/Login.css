@@ -1,4 +1,4 @@
-.Login{
+body{
     background-color: #0aa2ac;
     min-height: 100vh;
     width: 100vw;
@@ -6,4 +6,21 @@
 
 .button.green {
     background-color: var(--titleGreen);
+    color: var(--white);
+}
+
+h1.title{
+    color: var(--titleGreen);
+}
+
+h2.subtitle{
+    color: var(--darkGray);
+}
+
+.control{
+    margin-bottom: 2vh;
+}
+
+.Login-link{
+    text-decoration: underline;
 }
