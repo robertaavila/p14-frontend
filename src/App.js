@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { Auth, LoginForm } from './components/Login'
+import Header from "./components/Header";
 
 function App() {
   return (
@@ -21,7 +22,10 @@ function App() {
     //     </a>
     //   </header>
     // </div>
-      <Auth/>
+      <div>
+        <Header/>
+        <Auth/>
+      </div>
   );
 }
 
