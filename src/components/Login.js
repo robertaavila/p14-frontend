@@ -82,7 +82,7 @@ class LoginForm extends React.Component {
         return (
             <section>
                 <div className="container has-text-centered box" style={{maxWidth: '500px'}}>
-                    <h1 className="title">Bem vindo</h1>
+                    <h1 className="title">Bem-vindo</h1>
                     <h2 className="subtitle">Validação de atividades complementares SESI SENAI </h2>
                     <form
                         onSubmit={e => {
