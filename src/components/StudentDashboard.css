@@ -1,6 +1,8 @@
-.Validate{
-    margin: 2vw 15vw;
+.Student{
+    margin: 2vw 15vw 0 15vw;
     align-content: center;
+    margin-top: 0;
+    padding-bottom: 2vw;
 }
 
 .button{
