@@ -1,8 +1,12 @@
 import React from 'react';
 import './App.css';
-import { Auth } from './components/Login'
+import { Auth } from './components/Login';
+import Header from  './components/Header';
+import Menu from './components/Menu';
+import Validate from './components/Validate';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated, getUsuName, logout} from './util/login';
+import Admin from "./components/Admin";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route { ...rest} render={props => (
@@ -40,7 +44,15 @@ const Routes = () => (
 );
 
 function App() {
-  return <Routes />
+    return (
+        <div className="App">
+            <Header/>
+            {/*<Auth/>*/}
+            {/*<Validate/>*/}
+            <Admin/>
+        </div>
+
+    );
 }
 
 export default App;
