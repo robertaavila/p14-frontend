@@ -1,12 +1,11 @@
 import React from 'react';
 import './App.css';
 import { Auth } from './components/Login';
-import Header from  './components/Header';
 import Menu from './components/Menu';
-import Validate from './components/Validate';
+import StudentDashboard from './components/StudentDashboard';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated, getUsuName, logout} from './util/login';
-import Admin from "./components/Admin";
+import AdminDashboard from "./components/AdminDashboard";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route { ...rest} render={props => (
@@ -46,10 +45,10 @@ const Routes = () => (
 function App() {
     return (
         <div className="App">
-            <Header/>
+            {/*<Header/>*/}
             {/*<Auth/>*/}
-            {/*<Validate/>*/}
-            <Admin/>
+            {/*<StudentDashboard/>*/}
+            <AdminDashboard/>
         </div>
 
     );
