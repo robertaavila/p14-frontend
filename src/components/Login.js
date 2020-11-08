@@ -1,77 +1,86 @@
 import React from 'react';
 import './Login.css';
-import 'bulma/css/bulma.css'
+import 'bulma';
+import { getUrlServer } from '../util/env';
+import { login, logout } from '../util/login';
 
-
-const Wrapper = () => (
-    <div>
-        <Header/>
-        <Auth/>
-    </div>
-);
-
-const Header = () => (
-    <section className="hero is-danger is-bold">
-        <div className="hero-body">
-            <div className="container">
-                <h1 className="title">
-                    Sign In Component
-                </h1>
-                <h2 className="subtitle">
-                    With React + Bulma + Font Awesome
-                </h2>
-            </div>
-        </div>
-    </section>
-);
 
 class Auth extends React.Component {
 
     state = {
-        authenticated: false
+        modal: false,
+        modalMessage: "Nossos servidores se encontram indisponíveis no momento, tente novamente mais tarde.",
+        modalError: false,
+        loading: false
     }
 
-    loginWithEmailAndPassword = () => {
-        this.setState({authenticated: true})
-    }
-
-    loginWithProvider = () => {
-        this.setState({authenticated: true})
+    loginWithEmailAndPassword = (state) => {
+        const SERVER_URL = getUrlServer();
+        this.setState({loading: true});
+        fetch(SERVER_URL + 'acesso', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(state)
+        })
+        .then(resp => {
+            if (resp.statusText === "Not Found" || resp.statusText === "Internal Error") {
+                this.setState({
+                    modal: true,
+                    modalMessage: "Nossos servidores se encontram indisponíveis no momento, tente novamente mais tarde.",
+                    modalError: true,
+                    loading: false
+                });
+            }
+            return resp.json();
+        })
+        .then(data => {
+            if (typeof data.errors != 'undefined') {
+                this.setState({
+                    modal: true,
+                    modalMessage: data.errors,
+                    modalError: true,
+                    loading: false
+                });
+                return false;
+            }
+            login(data.token, data.nomeUsuario, data.emailUsuario);
+        })
+        .catch(error => {
+            if (error.statusText === "Not Found" || error.statusText === "Internal Error") {
+                this.setState({
+                    modal: true,
+                    modalMessage: "Nossos servidores se encontram indisponíveis no momento, tente novamente mais tarde.",
+                    modalError: true,
+                    loading: false
+                });
+            }
+            console.error(error);
+        });
     }
 
     handleClose = () => {
-        this.setState({authenticated: false})
+        this.setState({modal: false})
     }
 
     render() {
         return (
             <section className="section">
+                <LoginForm handleSubmit={this.loginWithEmailAndPassword} loading={this.state.loading} />
 
-                <LoginForm handleSubmit={this.loginWithEmailAndPassword}/>
-
-                <SignInSuccess active={this.state.authenticated} handleClose={this.handleClose}/>
-
+                <SignStatus modal={this.state.modal} handleClose={this.handleClose} modalMessage={this.state.modalMessage} modalError={this.state.modalError} />
             </section>
         )
     }
 }
 
-const LoginButton = ({icon, name, onClick}) => (
-    <div className="field">
-        <p className="control button is-medium" style={{width: '300px'}} onClick={onClick}>
-      <span className="icon">
-        <i className={`fa fa-${icon}`} aria-hidden="true"></i>
-      </span>
-            <span>{`Sign In With ${name}`}</span>
-        </p>
-    </div>
-);
-
 class LoginForm extends React.Component {
 
     state = {
         email: null,
-        password: null
+        senha: null,
+        loading: this.props.loading ? this.props.loading : false
     }
 
     handleChange = (event) => this.setState({[event.target.name]: event.target.value})
@@ -98,20 +107,26 @@ class LoginForm extends React.Component {
                         </div>
 
                         <div className="field">
-                            <label className="label" htmlFor="password">Senha</label>
+                            <label className="label" htmlFor="senha">Senha</label>
                             <div className="control">
-                                <input className="input" name="password" type="password" placeholder="senha" required
+                                <input className="input" name="senha" type="password" placeholder="senha" required
                                        onChange={this.handleChange}/>
                             </div>
                         </div>
 
                         <div className="field">
                             <div className="control buttons is-centered">
-                                <input className="button is-medium is-fullwidth green" type="submit" value="Entrar"/>
+                                <input className="button is-medium is-fullwidth green" type="submit" value="Entrar" style={{ outline: '0 !important' }}/>
+                                {
+                                    this.props.loading ?
+                                    (<progress class="progress is-small is-primary" max="100" style={{marginTop: '-15px'}}></progress>) : ''
+                                }
                             </div>
                         </div>
                     </form>
-                    <p>Esqueceu sua senha?</p>
+                    <div style={{ marginTop: '15px' }}>
+                        <a>Esqueceu sua senha?</a>
+                    </div>
                 </div>
                 <div className="container has-text-centered box" style={{maxWidth: '400px'}}>
 
@@ -140,19 +155,13 @@ class LoginForm extends React.Component {
     }
 }
 
-const SignInSuccess = ({active, handleClose}) => (
-    <div className={`modal ${active && 'is-active'}`}>
+const SignStatus = ({modal, handleClose, modalMessage = 'Teste', modalError}) => (
+    <div className={`modal ${modal && 'is-active'}`}>
         <div className="modal-background" onClick={handleClose}></div>
         <div className="modal-content">
-            <div className="notification is-success has-text-centered">
+            <div className={`notification ${modalError ? 'is-danger' : 'is-success'} is-light`}>
                 <button className="delete" onClick={handleClose}></button>
-                <p>
-          <span className="icon is-large">
-            <i className="fa fa-check-square fa-2x"></i>
-          </span>
-                    <span className="title"> Sign In Succesful!</span>
-                </p>
-
+                {modalMessage}
             </div>
         </div>
     </div>

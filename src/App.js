@@ -1,32 +1,46 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { Auth, LoginForm } from './components/Login'
-import Header from "./components/Header";
+import { Auth } from './components/Login'
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { isAuthenticated, getUsuName, logout} from './util/login';
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route { ...rest} render={props => (
+      isAuthenticated() ?
+      (<Component {...props} />) :
+      (<Redirect to={{ pathname: "/acesso", state: {from: props.location} }} />)
+  )} />
+);
+const LoginRoute = ({ component: Component, ...rest }) => (
+  <Route {...rest} render={props => (
+      isAuthenticated() ?
+      (<Redirect to={{ pathname: "/", state: {from: props.location} }} />) : 
+      (<Component {...props} />)
+  )} />
+);
+let firstName = getUsuName() ? (getUsuName().trim().split(" "))[0] : '';
+const Routes = () => (
+  <BrowserRouter>
+      <Switch>
+          <LoginRoute
+              exact
+              path="/acesso/"
+              component={() => <Auth />} />
+
+          <PrivateRoute 
+              path="/" 
+              component={() => <div>
+                  <div style={{color: "white", textAlign: "center", paddingTop: '10%', fontSize: "80px"}}>
+                    Bem vindo, {firstName}!
+                  </div>
+                </div>
+              } />
+      </Switch>
+  </BrowserRouter>
+);
 
 function App() {
-  return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
-      <div>
-        <Header/>
-        <Auth/>
-      </div>
-  );
+  return <Routes />
 }
 
 export default App;
