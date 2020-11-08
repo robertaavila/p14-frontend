@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import { Auth } from './components/Login';
-import Menu from './components/Menu';
 import StudentDashboard from './components/StudentDashboard';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated, getUsuName, logout} from './util/login';
@@ -45,7 +44,6 @@ const Routes = () => (
 function App() {
     return (
         <div className="App">
-            {/*<Header/>*/}
             {/*<Auth/>*/}
             {/*<StudentDashboard/>*/}
             <AdminDashboard/>
