@@ -5,6 +5,7 @@ import StudentDashboard from './components/StudentDashboard';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated, getUsuName, logout} from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
+import ValidationForm from "./components/ValidationForm";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route { ...rest} render={props => (
@@ -46,7 +47,8 @@ function App() {
         <div className="App">
             {/*<Auth/>*/}
             {/*<StudentDashboard/>*/}
-            <AdminDashboard/>
+            {/*<AdminDashboard/>*/}
+            <ValidationForm/>
         </div>
 
     );
