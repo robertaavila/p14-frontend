@@ -4,6 +4,7 @@ import { Auth } from './components/Login';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated } from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
+import ValidationForm from "./components/ValidationForm";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route { ...rest} render={props => (
