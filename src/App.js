@@ -1,9 +1,8 @@
 import React from 'react';
 import './App.css';
 import { Auth } from './components/Login';
-import StudentDashboard from './components/StudentDashboard';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { isAuthenticated, getUsuName, logout} from './util/login';
+import { isAuthenticated } from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -20,7 +19,6 @@ const LoginRoute = ({ component: Component, ...rest }) => (
       (<Component {...props} />)
   )} />
 );
-let firstName = getUsuName() ? (getUsuName().trim().split(" "))[0] : '';
 const Routes = () => (
   <BrowserRouter>
       <Switch>
@@ -31,25 +29,13 @@ const Routes = () => (
 
           <PrivateRoute 
               path="/" 
-              component={() => <div>
-                  <div style={{color: "white", textAlign: "center", paddingTop: '10%', fontSize: "80px"}}>
-                    Bem vindo, {firstName}!
-                  </div>
-                </div>
-              } />
+              component={() => <AdminDashboard/> } />
       </Switch>
   </BrowserRouter>
 );
 
 function App() {
-    return (
-        <div className="App">
-            {/*<Auth/>*/}
-            {/*<StudentDashboard/>*/}
-            <AdminDashboard/>
-        </div>
-
-    );
+    return <Routes />;
 }
 
 export default App;
