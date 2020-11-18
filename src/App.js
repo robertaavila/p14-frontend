@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Auth } from './components/Login';
+import { ConfirmacaoAcesso } from './components/ConfirmacaoAcesso';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated } from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
@@ -27,6 +28,11 @@ const Routes = () => (
               exact
               path="/acesso/"
               component={() => <Auth />} />
+
+          <Route
+              exact
+              path="/acesso/confirmacao/:secret"
+              component={ConfirmacaoAcesso} />
 
           <PrivateRoute 
               path="/" 
