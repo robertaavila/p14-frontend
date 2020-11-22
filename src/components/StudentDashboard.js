@@ -5,7 +5,7 @@ import 'bulma/css/bulma.css'
 export default class StudentDashboard extends React.Component {
     render() {
         return (
-            <div className="Student ">
+            <div className="Student">
                 <div className="pt-4 has-text-centered">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 271.478 28.846" height="4vh">
                         <g transform="translate(0.5 0.5)" fill="#FFF">
@@ -54,20 +54,29 @@ export default class StudentDashboard extends React.Component {
                 <div className="tile m-3">
                     <div className="tile is-vertical box">
                         <p className="title">Processos de validação</p>
+                        <div className="">
+                            <button className="button is-medium is-info validate">Iniciar processo <br></br>de validação
+                            </button>
+                        </div>
                         <div className="tile is-parent is-half">
                             <div className="tile is-child box">
-                                <table className="table is-fullwidth is-striped is-narrow is-hoverable">
+                                <table className="table is-fullwidth is-striped is-narrow is-hoverable
+                                is-centered">
                                     <tbody>
                                     <tr height="5%">
                                         <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                        <td>Lorum ipsum dolem aire</td>
+                                        <td>Processo 1</td>
+                                        <td>Criado em: 05/10/2020</td>
+                                        <td>Turma: 2020/1</td>
                                         <td className="level-right"><a
                                             className="button is-small is-primary" href="#">Abrir</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                        <td>Lorum ipsum dolem aire</td>
+                                        <td>Processo 2</td>
+                                        <td>Criado em: 10/10/2020</td>
+                                        <td>Turma: 2020/1</td>
                                         <td className="level-right"><a
                                             className="button is-small is-primary" href="#">Abrir</a>
                                         </td>
@@ -75,8 +84,6 @@ export default class StudentDashboard extends React.Component {
                                     </tbody>
                                 </table>
                             </div>
-                            <button className="button is-medium is-info">Iniciar processo <br></br>de validação
-                            </button>
                         </div>
                     </div>
                 </div>
