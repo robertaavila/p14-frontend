@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
-import {Auth} from './components/Login';
-import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
-import {isAuthenticated} from './util/login';
+import { Auth } from './components/Login';
+import { ConfirmacaoAcesso } from './components/ConfirmacaoAcesso';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { isAuthenticated } from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
 import StudentDashboard from "./components/StudentDashboard";
 import ValidationForm from "./components/ValidationForm";
@@ -29,11 +30,16 @@ const Routes = () => (
                 path="/acesso/"
                 component={() => <Auth/>}/>
 
-            <PrivateRoute
-                path="/"
-                component={() => <AdminDashboard/>}/>
-        </Switch>
-    </BrowserRouter>
+          <Route
+              exact
+              path="/acesso/confirmacao/:secret"
+              component={ConfirmacaoAcesso} />
+
+          <PrivateRoute 
+              path="/" 
+              component={() => <AdminDashboard/> } />
+      </Switch>
+  </BrowserRouter>
 );
 
 function App() {
