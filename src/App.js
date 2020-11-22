@@ -46,9 +46,6 @@ function App() {
     return (
         <div className="App">
             <Auth/>
-            <StudentDashboard/>
-            <AdminDashboard/>
-            <ValidationForm/>
         </div>
     )
 }
