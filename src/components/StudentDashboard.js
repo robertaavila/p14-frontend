@@ -22,6 +22,7 @@ export default class StudentDashboard extends React.Component {
                         </g>
                     </svg>
                 </div>
+
                 <div className="column">
                     <section className="hero is-primary welcome is-small">
                         <div className="hero-body">
@@ -36,34 +37,50 @@ export default class StudentDashboard extends React.Component {
                         </div>
                     </section>
                 </div>
-                <div className="tile is-vertical">
-                    <div className="tile">
-                        <div className="tile is-parent">
-                            <article className="tile is-child box">
-                                <p className="title">Processos de validação</p>
-                                <button className="button is-medium is-info">Iniciar processo <br></br>de validação
-                                </button>
-                                <button className="button is-medium is-warning">Ver processos <br></br>em andamento
-                                </button>
-
-                            </article>
-                        </div>
-                        <div className="tile is-vertical">
-                            <div className="tile">
-                                <div className="tile is-parent is-vertical">
-                                    <article className="tile is-child notification">
-                                        <p className="title">Horas validadas:</p>
-                                        <p className="subtitle">Mostrar número</p>
-                                    </article>
-                                    <article className="tile is-child notification">
-                                        <p className="title">Horas a validar:</p>
-                                        <p className="subtitle">Mostrar número</p>
-                                    </article>
-                                </div>
+                <div className="tile">
+                    <div className="tile is-parent is-half">
+                        <article className="tile is-child notification">
+                            <p className="title">Horas validadas:</p>
+                            <p className="subtitle">Mostrar número</p>
+                        </article>
+                    </div>
+                    <div className="tile is-parent is-half">
+                        <article className="tile is-child notification">
+                            <p className="title">Horas a validar:</p>
+                            <p className="subtitle">Mostrar número</p>
+                        </article>
+                    </div>
+                </div>
+                <div className="tile m-3">
+                    <div className="tile is-vertical box">
+                        <p className="title">Processos de validação</p>
+                        <div className="tile is-parent is-half">
+                            <div className="tile is-child box">
+                                <table className="table is-fullwidth is-striped is-narrow is-hoverable">
+                                    <tbody>
+                                    <tr height="5%">
+                                        <td width="5%"><i className="fa fa-bell-o"></i></td>
+                                        <td>Lorum ipsum dolem aire</td>
+                                        <td className="level-right"><a
+                                            className="button is-small is-primary" href="#">Abrir</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="5%"><i className="fa fa-bell-o"></i></td>
+                                        <td>Lorum ipsum dolem aire</td>
+                                        <td className="level-right"><a
+                                            className="button is-small is-primary" href="#">Abrir</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
+                            <button className="button is-medium is-info">Iniciar processo <br></br>de validação
+                            </button>
                         </div>
                     </div>
                 </div>
+
 
                 <div className="tile">
                     <div className="tile is-parent is-vertical">
