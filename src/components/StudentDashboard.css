@@ -7,6 +7,13 @@
 
 .Student .button{
     padding: 1vw;
-    margin: 1vw;
-    height: 10vw;
+    margin: 0 1vw;
+    height: 5vw;
+}
+
+.Student .button .validate{
+    padding: 1vw;
+    margin: 0 1vw;
+    height: 5vw;
+    width: 50vw;
 }
