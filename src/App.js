@@ -6,6 +6,7 @@ import {isAuthenticated} from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
 import StudentDashboard from "./components/StudentDashboard";
 import ValidationForm from "./components/ValidationForm";
+import CreateCourse from "./components/CreateCourse";
 
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render={props => (
@@ -39,10 +40,13 @@ const Routes = () => (
 function App() {
     return (
         <div className="App">
-            <Auth/>
-            <StudentDashboard/>
-            <AdminDashboard/>
-            <ValidationForm/>
+            {/*<Auth/>*/}
+            {/*<StudentDashboard/>*/}
+            {/*<AdminDashboard/>*/}
+            {/*<ValidationForm/>*/}
+            {/*<CreateStudent/>*/}
+            {/*<CreateClass/>*/}
+            <CreateCourse/>
         </div>
     )
 }
