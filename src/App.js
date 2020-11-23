@@ -45,7 +45,7 @@ const Routes = () => (
 function App() {
     return (
         <div className="App">
-            <Auth/>
+            <Routes/>
         </div>
     )
 }
