@@ -13,7 +13,7 @@ class Dashboard extends React.Component {
                         <div className="hero-body">
                             <div className="container">
                                 <h1 className="title">
-                                    Bem-vindo, {firstName}.
+                                    Bem-vindo, Colaborador {firstName}.
                                 </h1>
                                 <h2 className="subtitle">
                                     Sistema de validação de atividades complementares SESI SENAI
@@ -64,32 +64,49 @@ class Dashboard extends React.Component {
                                 </header>
                                 <div className="card-table">
                                     <div className="content">
-                                        <table className="table is-fullwidth is-striped">
+                                        <table className="table is-fullwidth is-striped is-hoverable">
                                             <tbody>
                                             <tr>
                                                 <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                                <td>Lorum ipsum dolem aire</td>
+                                                <td>Processo 2</td>
+                                                <td>Status: em análise</td>
+                                                <td>Turma: 2019/1</td>
                                                 <td className="level-right"><a
                                                     className="button is-small is-primary" href="#">Abrir</a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                                <td>Lorum ipsum dolem aire</td>
+                                                <td>Processo 2</td>
+                                                <td>Status: em análise</td>
+                                                <td>Turma: 2018/1</td>
                                                 <td className="level-right"><a
                                                     className="button is-small is-primary" href="#">Abrir</a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                                <td>Lorum ipsum dolem aire</td>
+                                                <td>Processo 2</td>
+                                                <td>Status: em análise</td>
+                                                <td>Turma: 2020/1</td>
                                                 <td className="level-right"><a
                                                     className="button is-small is-primary" href="#">Abrir</a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                                <td>Lorum ipsum dolem aire</td>
+                                                <td>Processo 2</td>
+                                                <td>Status: em análise</td>
+                                                <td>Turma: 2018/1</td>
+                                                <td className="level-right"><a
+                                                    className="button is-small is-primary" href="#">Abrir</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="5%"><i className="fa fa-bell-o"></i></td>
+                                                <td>Processo 2</td>
+                                                <td>Status: em análise</td>
+                                                <td>Turma: 2020/1</td>
                                                 <td className="level-right"><a
                                                     className="button is-small is-primary" href="#">Abrir</a>
                                                 </td>
@@ -115,11 +132,13 @@ class Dashboard extends React.Component {
                                     </span>
                                     </a>
                                 </header>
-                                <div className="card-content">
+                                <div className="card-content pb-1">
                                     <div className="content">
                                         <div className="control has-icons-left has-icons-right">
-                                            <input className="input is-large" type="text"
+                                            <input className="input is-half" type="text"
                                                     placeholder=""></input>
+                                            <button className="button is-small is-info validate mt-2">Buscar
+                                            </button>
                                             <span className="icon is-medium is-left">
                                                 <i className="fa fa-search"></i>
                                             </span>
@@ -141,11 +160,13 @@ class Dashboard extends React.Component {
                                     </span>
                                     </a>
                                 </header>
-                                <div className="card-content">
+                                <div className="card-content pb-1">
                                     <div className="content">
                                         <div className="control has-icons-left has-icons-right">
-                                            <input className="input is-large" type="text"
-                                                    placeholder=""></input>
+                                            <input className="input" type="text"
+                                                   placeholder=""></input>
+                                            <button className="button is-small is-info validate mt-2">Buscar
+                                            </button>
                                             <span className="icon is-medium is-left">
                                                     <i className="fa fa-search"></i>
                                             </span>

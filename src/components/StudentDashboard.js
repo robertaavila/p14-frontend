@@ -67,7 +67,7 @@ export default class StudentDashboard extends React.Component {
                                         <td width="5%"><i className="fa fa-bell-o"></i></td>
                                         <td>Processo 1</td>
                                         <td>Criado em: 05/10/2020</td>
-                                        <td>Turma: 2020/1</td>
+                                        <td>Status: aprovado</td>
                                         <td className="level-right"><a
                                             className="button is-small is-primary" href="#">Abrir</a>
                                         </td>
@@ -76,7 +76,7 @@ export default class StudentDashboard extends React.Component {
                                         <td width="5%"><i className="fa fa-bell-o"></i></td>
                                         <td>Processo 2</td>
                                         <td>Criado em: 10/10/2020</td>
-                                        <td>Turma: 2020/1</td>
+                                        <td>Status: em análise</td>
                                         <td className="level-right"><a
                                             className="button is-small is-primary" href="#">Abrir</a>
                                         </td>
