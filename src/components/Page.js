@@ -2,15 +2,43 @@ import React from 'react';
 import { logout } from '../util/login';
 
 export default class Page extends React.Component {
+    componentDidMount () {
+        document.addEventListener('DOMContentLoaded', function () {
+            let menuId = window.location.pathname.replace("/", "");
+            let menu = document.getElementById(menuId);
+            if (menu) menu.style = "color: #3273dc";
+            
+            // Get all "navbar-burger" elements
+            var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    
+            // Check if there are any nav burgers
+            if ($navbarBurgers.length > 0) {
+    
+              // Add a click event on each of them
+              $navbarBurgers.forEach(function ($el) {
+                $el.addEventListener('click', function () {
+    
+                  // Get the target from the "data-target" attribute
+                  var target = $el.dataset.target;
+                  var $target = document.getElementById(target);
+    
+                  // Toggle the class on both the "navbar-burger" and the "navbar-menu"
+                  $el.classList.toggle('is-active');
+                  $target.classList.toggle('is-active');
+    
+                });
+              });
+            }
+        });
+    }
     render() {
         return (
             <div>
                 <div className="Admin">
-                    <nav className="navbar is-white">
-                        <div className="container">
-                            <div className="navbar-brand">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 271.478 28.846" height="4vh"
-                                    style={{marginTop: 7}}>
+                    <nav className="navbar">
+                        <div className="navbar-brand">
+                            <a className="navbar-item" href="/">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 271.478 28.846" height="25px">
                                     <g transform="translate(0.5 0.5)" fill="#1e9585">
                                         <g transform="translate(0 0)">
                                             <path className="a"
@@ -24,33 +52,48 @@ export default class Page extends React.Component {
                                             transform="translate(-95.097 -407.198)"/>
                                     </g>
                                 </svg>
-                            </div>
-                            <div id="navMenu" className="navbar-menu">
-                                <div className="navbar-start">
-                                    <a className="navbar-item" href="admin.html">
-                                        Colaboradores
-                                    </a>
-                                    <a className="navbar-item" href="admin.html">
-                                        Estudantes
-                                    </a>
-                                    <a className="navbar-item" href="admin.html">
-                                        Processos de validação
-                                    </a>
-                                    <a className="navbar-item" href="admin.html">
-                                        Turmas
-                                    </a>
-                                    <a className="navbar-item" href="admin.html">
-                                        Cursos
-                                    </a>
-                                    <a className="navbar-item" href="admin.html">
-                                        Relatórios
-                                    </a>
-                                    <a className="navbar-item hidden-web" onClick={logout}>Sair</a>
-                                </div>
+                            </a>
+                            <div className="navbar-burger burger" data-target="navMenu">
+                                <span></span>
+                                <span></span>
+                                <span></span>
                             </div>
                         </div>
-                        <div style={{paddingTop: "6px", marginRight: "15px"}}>
-                            <a className="navbar-item hidden-mobile" onClick={logout}>Sair</a>
+                        <div id="navMenu" className="navbar-menu txt-initial">
+                            <div className="navbar-start">
+                                <a id="funcionarios" className="navbar-item" href="/funcionarios">
+                                    <span class="icon is-small"><i class="fas fa-user"></i></span> 
+                                    &nbsp; Funcionários
+                                </a>
+                                <a id="alunos" className="navbar-item " href="/alunos">
+                                    <span class="icon is-small"><i class="fas fa-user-graduate"></i></span> 
+                                    &nbsp; Alunos
+                                </a>
+                                <a id="turmas" className="navbar-item" href="/turmas">
+                                    <span class="icon is-small"><i class="fas fa-book"></i></span> 
+                                    &nbsp; Turmas
+                                </a>
+                                <a id="cursos" className="navbar-item" href="/cursos">
+                                    <span class="icon is-small"><i class="fas fa-graduation-cap"></i></span> 
+                                    &nbsp; Cursos
+                                </a>
+                                <a id="relatorios" className="navbar-item" href="/relatorios">
+                                    <span class="icon is-small"><i class="fas fa-chart-area"></i></span> 
+                                    &nbsp; Relatórios
+                                </a>
+                                <a id="processo-validacao" className="navbar-item" href="/processo-validacao">
+                                    <span class="icon is-small"><i class="fas fa-file-alt"></i></span> 
+                                    &nbsp; Processos de validação
+                                </a>
+                            </div>
+                            <div className="navbar-end">
+                                <div className="navbar-item">
+                                    <a className="navbar-item" href="#" onClick={logout}>
+                                    <span class="icon is-small"><i class="fas fa-sign-out-alt"></i></span> 
+                                        &nbsp; Sair
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </nav>
                     <div className="container">
