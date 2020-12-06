@@ -11,11 +11,11 @@ export const login = (token, nomeUsuario, emailUsuario) => {
     window.location = '/';
 };
 
-export const logout = () => {
+export const logout = (redirect = true) => {
     window.localStorage.removeItem(TOKEN_KEY);
     window.localStorage.removeItem(USU_NAME_KEY);
     window.localStorage.removeItem(USU_EMAIL_KEY);
-    window.location = '/acesso';
+    if (redirect) window.location = '/acesso';
 };
 
 export const getUsuName = () => {

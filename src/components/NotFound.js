@@ -15,7 +15,7 @@ export default class NotFound extends React.Component {
                                 404
                             </h1>
                             <p className="subtitle" style={{ fontSize: "26px", color: "aliceblue" }}>
-                                A url que você está tentando acessar não existe.
+                                A página que você está tentando acessar não existe.
                             </p>
                         </div>
                         <div className="column">

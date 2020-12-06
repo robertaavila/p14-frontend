@@ -2,11 +2,14 @@ import React from 'react';
 import './App.css';
 import { Auth } from './components/Login';
 import { ConfirmacaoAcesso } from './components/ConfirmacaoAcesso';
+import { ConfirmacaoPrimeiroAcesso } from './components/ConfirmacaoPrimeiroAcesso';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated } from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
 import Turma from "./components/Turma";
 import Curso from "./components/Curso";
+import Aluno from "./components/Aluno";
+import Funcionario from "./components/Funcionario";
 import NotFound from "./components/NotFound";
 import StudentDashboard from "./components/StudentDashboard";
 import ValidationForm from "./components/ValidationForm";
@@ -38,6 +41,11 @@ const Routes = () => (
               path="/acesso/confirmacao/:secret"
               component={ConfirmacaoAcesso} />
 
+          <Route
+              exact
+              path="/acesso/primeiro_acesso/:secret"
+              component={ConfirmacaoPrimeiroAcesso} />
+
           <PrivateRoute 
               exact
               path="/" 
@@ -50,6 +58,14 @@ const Routes = () => (
           <PrivateRoute 
               path="/cursos" 
               component={() => <Curso/> } />
+
+          <PrivateRoute 
+              path="/alunos" 
+              component={() => <Aluno/> } />
+
+          <PrivateRoute 
+              path="/funcionarios" 
+              component={() => <Funcionario /> } />
               
           <Route path='*' exact component={NotFound} />
       </Switch>
