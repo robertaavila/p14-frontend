@@ -2,6 +2,8 @@ import React from 'react';
 import 'bulma/css/bulma.css';
 import Page from './Page';
 import CreateClass from './CreateClass';
+import {getUrlServer} from '../util/env';
+import {getToken} from '../util/login';
 
 export default class Turma extends React.Component {
     state = {
@@ -9,9 +11,13 @@ export default class Turma extends React.Component {
         cadastrar: false,
         editar: false,
         excluir: false,
+        error: '',
+        sucesso: '',
         id: 0,
         nome: '',
-        curso_id: ''
+        curso_id: '',
+        list_turmas: [],
+        list_cursos: []
     }
 
     handleCloseModal = () => {
@@ -20,6 +26,8 @@ export default class Turma extends React.Component {
             cadastrar: false,
             editar: false,
             excluir: false,
+            error: '',
+            sucesso: '',
             id: 0,
             nome: '',
             curso_id: ''
@@ -32,6 +40,8 @@ export default class Turma extends React.Component {
             cadastrar: true,
             editar: false,
             excluir: false,
+            error: '',
+            sucesso: '',
             id: 0,
             nome: '',
             curso_id: ''
@@ -43,21 +53,152 @@ export default class Turma extends React.Component {
             cadastrar: false,
             editar: true,
             excluir: false,
+            error: '',
+            sucesso: '',
             id: id,
             nome: nome,
             curso_id: curso_id
         });
     }
-    handleShowInativar = (id, nome) => {
+    handleShowInativar = (id, nome, curso_id) => {
         this.setState({
             modal: true,
             cadastrar: false,
             editar: false,
             excluir: true,
+            error: '',
+            sucesso: '',
             id: id,
-            nome: nome
+            nome: nome,
+            curso_id: curso_id
         });
     }
+
+    onChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    }
+    
+    componentWillMount = () => {
+        this.getTurmas();
+        this.getCursos();
+    }
+
+    getTurmas = () => {
+        fetch(getUrlServer() + "turma", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization': getToken()
+            }
+        })
+        .then(response => response.json())
+        .then((data) => {
+            let copyState = this.state;
+            copyState.list_turmas = data;
+            this.setState(copyState);
+        })
+        .catch(function(error) {
+            console.log('Ocorreu um erro ao realizar a requisição: ' + error.message);
+        });
+    }
+
+    getCursos = () => {
+        fetch(getUrlServer() + "curso", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization': getToken()
+            }
+        })
+        .then(response => response.json())
+        .then((data) => {
+            let copyState = this.state;
+            copyState.list_cursos = data;
+            this.setState(copyState);
+        })
+        .catch(function(error) {
+            console.log('Ocorreu um erro ao realizar a requisição: ' + error.message);
+        });
+    }
+
+    renderTable = () => {
+        return this.state.list_turmas.map((turma, i) => {
+            const { id_curso, id_turma, nome } = turma;
+            return (
+                <tr id={id_curso}>
+                    <td width="5%"> 
+                        <a onClick={() => { this.handleShowEditar(id_turma, nome, id_curso) }}> 
+                            <i className="fa fa-edit"></i> 
+                        </a> 
+                    </td> 
+                    <td>{id_turma}</td> 
+                    <td>{nome}</td> 
+                    <td>{turma['curso.nome']}</td> 
+                    <td className="level-right"> 
+                        <a onClick={() => { this.handleShowInativar(id_turma, nome, id_curso) }} 
+                        className="button is-small is-danger"> 
+                        <i className="fa fa-trash"></i> 
+                        </a> 
+                    </td> 
+                </tr>
+            );
+        });
+    }
+    renderSelectCursos = () => {
+        return this.state.list_cursos.map((curso, i) => {
+            const { id_curso, nome } = curso;
+            return (
+                <option value={id_curso}>{nome}</option>
+            );
+        });
+    }
+
+    onSubmit = (e) => {
+        e.preventDefault();
+        fetch(getUrlServer() + "turma", {
+            method: (this.state.cadastrar ? 'POST' : 'PUT'),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization': getToken()
+            },
+            body: JSON.stringify(
+                {
+                    nome: this.state.nome,
+                    ativo: (this.state.excluir ? 'N' : 'S'),
+                    id_curso: this.state.curso_id,
+                    id_turma: this.state.id
+                }
+            )
+        })
+        .then(response => response.json())
+        .then((data) => {
+            if (typeof data.errors != 'undefined') {
+                this.setState({
+                    sucesso: '',
+                    error: data.errors[0].msg
+                });
+                return;
+            }
+            this.setState({
+                nome: '',
+                error: '',
+                sucesso: (this.state.cadastrar ? 'Turma cadastrada!' : this.state.editar ? 'Turma editada!' : 'Turma inativada!')
+            });
+            this.componentWillMount();
+            setTimeout(() => {
+                this.handleCloseModal();
+            }, 2500);
+        })
+        .catch(function(error) {
+            console.log('Ocorreu um erro ao realizar a requisição: ' + error.message);
+        });
+    }
+
 
     render() {
         return (
@@ -80,13 +221,13 @@ export default class Turma extends React.Component {
                         </div>
                         <div className="column is-1">
                             <a onClick={this.handleShowCadastrar}
-                            className="button is-primary is-large">Cadastrar turma</a>
+                            className="button is-primary is-large">Cadastrar</a>
                         </div>
                         <div className="column is-12">
                             <div className="card events-card">
                                 <header className="card-header">
                                     <p className="card-header-title">
-                                        Processos de validação
+                                        Turmas
                                     </p>
                                     <a href="#" className="card-header-icon" aria-label="more options">
                                     <span className="icon">
@@ -105,22 +246,17 @@ export default class Turma extends React.Component {
                                                 <th></th>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td width="5%">
-                                                    <a onClick={() => { this.handleShowEditar(1, 'GR SADS 2019/1', 1) }}>
-                                                        <i className="fa fa-edit"></i>
-                                                    </a>
-                                                </td>
-                                                <td>1</td>
-                                                <td>GR SADS 2019/1</td>
-                                                <td>Análise e Desenvolvimento de Sistemas</td>
-                                                <td className="level-right">
-                                                    <a onClick={() => { this.handleShowInativar(1, 'GR SADS 2019/1') }}
-                                                    className="button is-small is-danger">
-                                                        <i className="fa fa-trash"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                            {
+                                                this.state.list_turmas.length > 0 ?
+                                                (
+                                                    this.renderTable()
+                                                ) :
+                                                (
+                                                    <tr>
+                                                    <td colSpan="6">Nada encontrado</td>
+                                                    </tr>
+                                                )
+                                            }
                                             </tbody>
                                         </table>
                                         <footer className="card-footer">
@@ -140,34 +276,70 @@ export default class Turma extends React.Component {
                             <p class="modal-card-title">
                             {
                                 (this.state.cadastrar) ?
-                                'Cadastrar Turma' :
+                                'Cadastrar' :
                                     (this.state.editar) ?
-                                    'Editar Turma' : 
+                                    'Editar' : 
                                         (this.state.excluir) ?
-                                        'Inativar Turma'  : ''
+                                        'Inativar'  : ''
                             }
                             </p>
                             <button class="delete" aria-label="close" onClick={this.handleCloseModal}></button>
                             </header>
                             <section class="modal-card-body">
+                            <form id="form-turma" onSubmit={this.onSubmit}>
                             {
-                                (this.state.cadastrar) ?
-                                <CreateClass /> :
-                                    (this.state.editar) ?
-                                    <CreateClass nome={this.state.nome} curso_id={this.state.curso_id} /> : 
-                                        (this.state.excluir) ?
-                                        (<p>Deseja inativar a turma <strong>{this.state.nome}</strong>?</p>) : ''
+                                (this.state.cadastrar || this.state.editar) ?
+                                (
+                                    <div style={{textAlign: 'initial'}}>
+                                        <div className="field">
+                                            <label className="label">Nome</label>
+                                            <div className="control">
+                                                <input name="nome" onChange={this.onChange} value={this.state.nome} className="input" type="text" placeholder="Informe o nome da turma" />
+                                            </div>
+                                        </div>
+                                        <div className="control">
+                                            <label className="label">Curso</label>
+                                            <div className="select">
+                                                <select name="curso_id" onChange={this.onChange} value={this.state.curso_id}>
+                                                    <option value="">Selecione</option>
+                                                    {
+                                                        this.state.list_cursos.length > 0 ?
+                                                            this.renderSelectCursos() :
+                                                            (<option value="" disabled>Nada encontrado!</option>)
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) :
+                                (this.state.excluir) ?
+                                (<p>Deseja inativar a turma <strong>{this.state.nome}</strong>?</p>) : ''
                             }
+                            {
+                                (this.state.error != '') ?
+                                    (
+                                        <div class="notification is-danger is-light">
+                                            {this.state.error}
+                                        </div>
+                                    ) : ''
+                            }
+                            {
+                                (this.state.sucesso != '') ?
+                                    (
+                                        <div class="notification is-success is-light">
+                                            {this.state.sucesso}
+                                        </div>
+                                    ) : ''
+                            }
+                            </form>
                             </section>
                             <footer class="modal-card-foot">
-                            {
-                                (this.state.cadastrar) ?
-                                <button class="button is-success">Salvar</button> :
-                                    (this.state.editar) ?
-                                    <button class="button is-success">Salvar</button> : 
-                                        (this.state.excluir) ?
-                                        <button class="button is-success">Sim</button> : ''
-                            }
+                                <button class="button is-success" onClick={this.onSubmit}>
+                                    {
+                                        (this.state.cadastrar || this.state.editar) ?
+                                        'Salvar' : 'Sim'
+                                    }
+                                </button>
                             <button class="button" onClick={this.handleCloseModal}>Cancelar</button>
                             </footer>
                         </div>

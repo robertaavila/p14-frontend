@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated } from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
 import Turma from "./components/Turma";
+import Curso from "./components/Curso";
 import NotFound from "./components/NotFound";
 import StudentDashboard from "./components/StudentDashboard";
 import ValidationForm from "./components/ValidationForm";
@@ -45,6 +46,10 @@ const Routes = () => (
           <PrivateRoute 
               path="/turmas" 
               component={() => <Turma/> } />
+
+          <PrivateRoute 
+              path="/cursos" 
+              component={() => <Curso/> } />
               
           <Route path='*' exact component={NotFound} />
       </Switch>

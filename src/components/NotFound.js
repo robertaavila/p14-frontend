@@ -19,7 +19,7 @@ export default class NotFound extends React.Component {
                             </p>
                         </div>
                         <div className="column">
-                            <img src="/img/nazare.gif" style={{ position: "absolute", top: 0, left: 0, width: "100%", opacity: ".3" }} />
+                            <img src="/img/404.gif" style={{ position: "absolute", top: 0, left: 0, width: "100%", opacity: ".3" }} />
                         </div>
                     </div>
                 </section>
