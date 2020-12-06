@@ -7,9 +7,6 @@ export default class ValidateForm extends React.Component {
         return (
             <div className="column ">
                 <div className="has-text-centered">
-                    <p className="has-text-left">
-                        voltar
-                    </p>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 271.478 28.846" height="4vh">
                         <g transform="translate(0.5 0.5)" fill="#FFF">
                             <g transform="translate(0 0)">
@@ -24,9 +21,6 @@ export default class ValidateForm extends React.Component {
                                   transform="translate(-95.097 -407.198)"/>
                         </g>
                     </svg>
-                    <p className="has-text-right">
-                        sair
-                    </p>
                 </div>
                 <p className="pb-3 has-text-weight-bold is-size-5">
                     Preencha o formulário abaixo para iniciar a validação de atividade complementar
@@ -116,7 +110,8 @@ export default class ValidateForm extends React.Component {
                                         <div className="control mt-2">
                                             <label className="checkbox">
                                                 <input type="checkbox"></input>
-                                                &nbsp; Atesto que este documento é verídico e aceito as implicações legais cabíveis.
+                                                &nbsp; Atesto que este documento é verídico e aceito as implicações
+                                                legais cabíveis.
                                             </label>
                                         </div>
                                     </div>
@@ -174,6 +169,10 @@ export default class ValidateForm extends React.Component {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="buttons is-centered ">
+                    <button className="button is-link">Voltar</button>
+                    <button className="button is-danger">Sair</button>
                 </div>
             </div>
         );
