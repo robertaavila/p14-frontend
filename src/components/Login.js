@@ -76,6 +76,18 @@ class Auth extends React.Component {
     }
 }
 
+const SignStatus = ({modal, handleClose, modalMessage = 'Teste', modalError}) => (
+    <div className={`modal ${modal && 'is-active'}`}>
+        <div className="modal-background" onClick={handleClose}></div>
+        <div className="modal-content">
+            <div className={`notification ${modalError ? 'is-danger' : 'is-success'} is-light`}>
+                <button className="delete" onClick={handleClose}></button>
+                {modalMessage}
+            </div>
+        </div>
+    </div>
+);
+
 class LoginForm extends React.Component {
 
     state = {
@@ -86,7 +98,67 @@ class LoginForm extends React.Component {
 
     handleChange = (event) => this.setState({[event.target.name]: event.target.value})
 
-    handleSubmit = () => this.props.handleSubmit(this.state)
+    handleSubmit = () => this.props.handleSubmit(this.state);
+    handleClose = () => {
+        this.setState({modal: false})
+    }
+    alterarSenha = () => {
+        if (this.state.email == "" || this.state.email == null) {
+            this.setState({
+                modal: true,
+                modalMessage: "Informe o e-mail!",
+                modalError: true,
+                loading: false
+            });
+            return;
+        }
+        const SERVER_URL = getUrlServer();
+        fetch(SERVER_URL + 'acesso/solicita_alteracao_senha/', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: this.state.email})
+        }).then(resp => {
+            if (resp.statusText === "Not Found" || resp.statusText === "Internal Error") {
+                this.setState({
+                    modal: true,
+                    modalMessage: "Nossos servidores se encontram indisponíveis no momento, tente novamente mais tarde.",
+                    modalError: true,
+                    loading: false
+                });
+            }
+            return resp.json();
+        })
+        .then(data => {
+            if (typeof data.errors != 'undefined') {
+                this.setState({
+                    modal: true,
+                    modalMessage: data.errors,
+                    modalError: true,
+                    loading: false
+                });
+                return false;
+            }
+            this.setState({
+                modal: true,
+                modalMessage: `Enviamos um e-mail para ${this.state.email} com as instruções para alteração da senha!`,
+                modalError: true,
+                loading: false
+            });
+        })
+        .catch(error => {
+            if (error.statusText === "Not Found" || error.statusText === "Internal Error") {
+                this.setState({
+                    modal: true,
+                    modalMessage: "Nossos servidores se encontram indisponíveis no momento, tente novamente mais tarde.",
+                    modalError: true,
+                    loading: false
+                });
+            }
+            console.error(error);
+        });
+    }
 
     render() {
         return (
@@ -146,7 +218,7 @@ class LoginForm extends React.Component {
                         </div>
                     </form>
                     <div style={{marginTop: '15px'}}>
-                        <a>Esqueceu sua senha?</a>
+                        <a onClick={this.alterarSenha}>Esqueceu sua senha?</a>
                     </div>
                 </div>
                 <div className="container has-text-centered box" style={{maxWidth: '400px'}}>
@@ -170,22 +242,11 @@ class LoginForm extends React.Component {
                         <h2>SENAI - Regulamento de Atividades Complementares</h2>
                     </a>
                 </div>
-
+                <SignStatus modal={this.state.modal} handleClose={this.handleClose}
+                            modalMessage={this.state.modalMessage} modalError={this.state.modalError}/>
             </section>
         );
     }
 }
-
-const SignStatus = ({modal, handleClose, modalMessage = 'Teste', modalError}) => (
-    <div className={`modal ${modal && 'is-active'}`}>
-        <div className="modal-background" onClick={handleClose}></div>
-        <div className="modal-content">
-            <div className={`notification ${modalError ? 'is-danger' : 'is-success'} is-light`}>
-                <button className="delete" onClick={handleClose}></button>
-                {modalMessage}
-            </div>
-        </div>
-    </div>
-);
 
 export {Auth, LoginForm} ;

@@ -3,6 +3,7 @@ import './App.css';
 import { Auth } from './components/Login';
 import { ConfirmacaoAcesso } from './components/ConfirmacaoAcesso';
 import { ConfirmacaoPrimeiroAcesso } from './components/ConfirmacaoPrimeiroAcesso';
+import { AlterarSenha } from './components/AlterarSenha';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated } from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
@@ -45,6 +46,11 @@ const Routes = () => (
               exact
               path="/acesso/primeiro_acesso/:secret"
               component={ConfirmacaoPrimeiroAcesso} />
+
+          <Route
+              exact
+              path="/acesso/alterar_senha/:secret"
+              component={AlterarSenha} />
 
           <PrivateRoute 
               exact
