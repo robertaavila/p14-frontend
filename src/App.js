@@ -16,7 +16,10 @@ import StudentDashboard from "./components/StudentDashboard";
 import ValidationForm from "./components/ValidationForm";
 import {ForgotPassword} from "./components/ForgotPassword";
 import StepsValidation from "./components/StepsValidation";
-import Graphs from "./components/Graphs";
+import BarChart from "./components/BarChart";
+import BubbleChart from "./components/PieChart";
+import DoughnutChart from "./components/LineChart";
+import PieChart from "./components/PieChart";
 
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render={props => (
@@ -84,7 +87,7 @@ const Routes = () => (
 function App() {
     return (
         <div className="App">
-            <Graphs/>
+            <PieChart/>
         </div>
     )
 }
