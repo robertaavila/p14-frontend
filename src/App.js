@@ -14,6 +14,9 @@ import Funcionario from "./components/Funcionario";
 import NotFound from "./components/NotFound";
 import StudentDashboard from "./components/StudentDashboard";
 import ValidationForm from "./components/ValidationForm";
+import {ForgotPassword} from "./components/ForgotPassword";
+import StepsValidation from "./components/StepsValidation";
+import Graphs from "./components/Graphs";
 
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render={props => (
@@ -81,15 +84,9 @@ const Routes = () => (
 function App() {
     return (
         <div className="App">
-            <Routes/>
+            <Graphs/>
         </div>
     )
 }
-
-// colocar os processos na largura da página
-// listagem de processos colocar id, data e turma
-// colocar horas validadas e a validar lado a lado no topo
-// tirar o botao ver processos
-// inserir listagem de processos abertos
 
 export default App;
