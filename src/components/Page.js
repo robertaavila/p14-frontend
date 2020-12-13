@@ -1,5 +1,5 @@
 import React from 'react';
-import { logout } from '../util/login';
+import { logout, getUsuPermissoes } from '../util/login';
 
 export default class Page extends React.Component {
     componentDidMount () {
@@ -61,30 +61,62 @@ export default class Page extends React.Component {
                         </div>
                         <div id="navMenu" className="navbar-menu txt-initial">
                             <div className="navbar-start">
-                                <a id="funcionarios" className="navbar-item" href="/funcionarios">
-                                    <span class="icon is-small"><i class="fas fa-user"></i></span> 
-                                    &nbsp; Funcionários
-                                </a>
-                                <a id="alunos" className="navbar-item " href="/alunos">
-                                    <span class="icon is-small"><i class="fas fa-user-graduate"></i></span> 
-                                    &nbsp; Alunos
-                                </a>
-                                <a id="turmas" className="navbar-item" href="/turmas">
+                                {
+                                   getUsuPermissoes().indexOf("crudFuncionario") > -1 ?
+                                   (<a id="funcionarios" className="navbar-item" href="/funcionarios">
+                                   <span class="icon is-small"><i class="fas fa-user"></i></span> 
+                                   &nbsp; Funcionários
+                                   </a>) : ''
+                                }
+                                {
+                                    getUsuPermissoes().indexOf("crudAluno") > -1 ?
+                                    (<a id="alunos" className="navbar-item " href="/alunos">
+                                        <span class="icon is-small"><i class="fas fa-user-graduate"></i></span> 
+                                        &nbsp; Alunos
+                                    </a>) : ''
+                                }
+                                {
+                                    getUsuPermissoes().indexOf("crudTurma") > -1 ?
+                                    (<a id="turmas" className="navbar-item" href="/turmas">
                                     <span class="icon is-small"><i class="fas fa-book"></i></span> 
                                     &nbsp; Turmas
-                                </a>
-                                <a id="cursos" className="navbar-item" href="/cursos">
-                                    <span class="icon is-small"><i class="fas fa-graduation-cap"></i></span> 
-                                    &nbsp; Cursos
-                                </a>
-                                <a id="relatorios" className="navbar-item" href="/relatorios">
-                                    <span class="icon is-small"><i class="fas fa-chart-area"></i></span> 
-                                    &nbsp; Relatórios
-                                </a>
-                                <a id="processo-validacao" className="navbar-item" href="/processo-validacao">
-                                    <span class="icon is-small"><i class="fas fa-file-alt"></i></span> 
-                                    &nbsp; Processos de validação
-                                </a>
+                                    </a>) : ''
+                                }
+                                {
+                                    getUsuPermissoes().indexOf("crudCursos") > -1 ?
+                                    (<a id="cursos" className="navbar-item" href="/cursos">
+                                        <span class="icon is-small"><i class="fas fa-graduation-cap"></i></span> 
+                                        &nbsp; Cursos
+                                    </a>) : ''
+                                }
+                                {
+                                    getUsuPermissoes().indexOf("relatorios") > -1 ?
+                                    (<a id="relatorios" className="navbar-item" href="/relatorios">
+                                        <span class="icon is-small"><i class="fas fa-chart-area"></i></span> 
+                                        &nbsp; Relatórios
+                                    </a>) : ''
+                                }
+                                {
+                                    getUsuPermissoes().indexOf("visualizarProcessos") > -1 ?
+                                    (<a id="processo-validacao" className="navbar-item" href="/processo-validacao">
+                                        <span class="icon is-small"><i class="fas fa-file-alt"></i></span> 
+                                        &nbsp; Processos de validação
+                                    </a>) : ''
+                                }
+                                {
+                                    getUsuPermissoes().indexOf("visualizarSomenteMeusProcessos") > -1 ?
+                                    (<a id="minhas-validacoes" className="navbar-item" href="/minhas-validacoes">
+                                        <span class="icon is-small"><i class="fas fa-file-alt"></i></span> 
+                                        &nbsp; Minhas validações
+                                    </a>) : ''
+                                }
+                                {
+                                    getUsuPermissoes().indexOf("solicitarProcesso") > -1 ?
+                                    (<a id="nova-validacao" className="navbar-item" href="/nova-validacao">
+                                        <span class="icon is-small"><i class="fas fa-plus"></i></span> 
+                                        &nbsp; Solicitar validação
+                                    </a>) : ''
+                                }
                             </div>
                             <div className="navbar-end">
                                 <div className="navbar-item">

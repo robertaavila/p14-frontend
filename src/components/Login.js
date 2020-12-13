@@ -45,7 +45,7 @@ class Auth extends React.Component {
                     });
                     return false;
                 }
-                login(data.token, data.nomeUsuario, data.emailUsuario);
+                login(data.token, data.nomeUsuario, data.emailUsuario, data.tipoUsuario, data.idUsuario, data.idTurma, data.turma, data.idCurso);
             })
             .catch(error => {
                 if (error.statusText === "Not Found" || error.statusText === "Internal Error") {

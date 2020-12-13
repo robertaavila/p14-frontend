@@ -1,8 +1,9 @@
 import React from 'react';
 import './StudentDashboard.css';
+import Page from './Page';
 import 'bulma/css/bulma.css'
 
-export default class StudentDashboard extends React.Component {
+class Dashboard extends React.Component {
     render() {
         return (
             <div className="Student">
@@ -117,6 +118,15 @@ export default class StudentDashboard extends React.Component {
                         </article>
                     </div>
                 </div>
+            </div>
+        );
+    }
+}
+export default class StudentDashboard extends React.Component {
+    render() {
+        return (
+            <div>
+                <Page body={<Dashboard />}/>    
             </div>
         );
     }

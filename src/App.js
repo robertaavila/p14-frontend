@@ -5,7 +5,7 @@ import { ConfirmacaoAcesso } from './components/ConfirmacaoAcesso';
 import { ConfirmacaoPrimeiroAcesso } from './components/ConfirmacaoPrimeiroAcesso';
 import { AlterarSenha } from './components/AlterarSenha';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { isAuthenticated } from './util/login';
+import { isAuthenticated, getUsuPermissoes } from './util/login';
 import AdminDashboard from "./components/AdminDashboard";
 import Turma from "./components/Turma";
 import Curso from "./components/Curso";
@@ -14,12 +14,8 @@ import Funcionario from "./components/Funcionario";
 import NotFound from "./components/NotFound";
 import StudentDashboard from "./components/StudentDashboard";
 import ValidationForm from "./components/ValidationForm";
-import {ForgotPassword} from "./components/ForgotPassword";
-import StepsValidation from "./components/StepsValidation";
-import BarChart from "./components/BarChart";
-import BubbleChart from "./components/PieChart";
-import DoughnutChart from "./components/LineChart";
-import PieChart from "./components/PieChart";
+
+const permissoes = getUsuPermissoes();
 
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render={props => (
@@ -61,23 +57,61 @@ const Routes = () => (
           <PrivateRoute 
               exact
               path="/" 
-              component={() => <AdminDashboard/> } />
+              component={() => {
+                if (permissoes.indexOf("dashboardAluno") > -1) {
+                    return <StudentDashboard/>;
+                }
+                return <AdminDashboard/>;
+              }} />
 
-          <PrivateRoute 
-              path="/turmas" 
-              component={() => <Turma/> } />
+          {
+              permissoes.indexOf("crudTurma") > -1 ?
+              (<PrivateRoute 
+                path="/turmas" 
+                component={() => <Turma/> } />) : ''
+          }
 
-          <PrivateRoute 
-              path="/cursos" 
-              component={() => <Curso/> } />
-
-          <PrivateRoute 
+          {
+              permissoes.indexOf("crudCursos") > -1 ?
+              (<PrivateRoute 
+                path="/cursos" 
+                component={() => <Curso/> } />) : ''
+          }
+          
+          {
+              permissoes.indexOf("crudAluno") > -1 ?
+              (<PrivateRoute 
               path="/alunos" 
-              component={() => <Aluno/> } />
+              component={() => <Aluno/> } />) : ''
+          }
 
-          <PrivateRoute 
-              path="/funcionarios" 
-              component={() => <Funcionario /> } />
+          {
+              permissoes.indexOf("crudAluno") > -1 ?
+              (<PrivateRoute 
+                path="/funcionarios" 
+                component={() => <Funcionario /> } />) : ''
+          }
+
+          {
+              permissoes.indexOf("visualizarProcessos") > -1 ?
+              (<PrivateRoute 
+                path="/processo-validacao" 
+                component={() => <ValidationForm /> } />) : ''
+          }
+
+          {
+              permissoes.indexOf("visualizarSomenteMeusProcessos") > -1 ?
+              (<PrivateRoute 
+                path="/minhas-validacoes" 
+                component={() => <ValidationForm /> } />) : ''
+          }
+
+          {
+              permissoes.indexOf("solicitarProcesso") > -1 ?
+              (<PrivateRoute 
+                path="/nova-validacao" 
+                component={() => <ValidationForm /> } />) : ''
+          }
               
           <Route path='*' exact component={NotFound} />
       </Switch>
@@ -87,7 +121,7 @@ const Routes = () => (
 function App() {
     return (
         <div className="App">
-            <PieChart/>
+            <Routes/>
         </div>
     )
 }

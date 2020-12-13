@@ -1,13 +1,23 @@
 const TOKEN_KEY = "token";
 const USU_NAME_KEY = "nomeUsuario";
 const USU_EMAIL_KEY = "emailUsuario";
+const USU_TIPO_KEY = "tipoUsuario";
+const USU_ID_KEY = "idUsuario";
+const USU_IDTURMA_KEY = "idTurma";
+const USU_NOMETURMA_KEY = "nomeTurma";
+const USU_IDCURSO_KEY = "idCurso";
 
 export const getToken = () => window.localStorage.getItem(TOKEN_KEY);
 
-export const login = (token, nomeUsuario, emailUsuario) => {
+export const login = (token, nomeUsuario, emailUsuario, tipoUsuario, idUsuario, idTurma, nomeTurma, idCurso) => {
     window.localStorage.setItem(TOKEN_KEY, token);
     window.localStorage.setItem(USU_NAME_KEY, nomeUsuario);
     window.localStorage.setItem(USU_EMAIL_KEY, emailUsuario);
+    window.localStorage.setItem(USU_TIPO_KEY, tipoUsuario);
+    window.localStorage.setItem(USU_ID_KEY, idUsuario);
+    window.localStorage.setItem(USU_IDTURMA_KEY, idTurma);
+    window.localStorage.setItem(USU_NOMETURMA_KEY, nomeTurma);
+    window.localStorage.setItem(USU_IDCURSO_KEY, idCurso);
     window.location = '/';
 };
 
@@ -24,6 +34,48 @@ export const getUsuName = () => {
 
 export const getUsuEmail = () => {
     return window.localStorage.getItem(USU_EMAIL_KEY);
+};
+
+export const getUsuTipo = () => {
+    return window.localStorage.getItem(USU_TIPO_KEY);
+};
+
+export const getUsuId = () => {
+    return window.localStorage.getItem(USU_ID_KEY);
+};
+
+export const getUsuIdTurma = () => {
+    return window.localStorage.getItem(USU_IDTURMA_KEY);
+};
+
+export const getUsuNomeTurma = () => {
+    return window.localStorage.getItem(USU_NOMETURMA_KEY);
+};
+
+export const getUsuIdCurso = () => {
+    return window.localStorage.getItem(USU_IDCURSO_KEY);
+};
+
+export const getUsuPermissoes = () => {
+    let permissoes = [];
+    switch (window.localStorage.getItem(USU_TIPO_KEY)) {
+        case "Aluno":
+            permissoes.push("visualizarSomenteMeusProcessos");
+            permissoes.push("solicitarProcesso");
+            permissoes.push("dashboardAluno");
+            break;
+        default:
+            permissoes.push("crudFuncionario");
+            permissoes.push("crudAluno");
+            permissoes.push("crudTurma");
+            permissoes.push("crudCursos");
+            permissoes.push("relatorios");
+            permissoes.push("visualizarProcessos");
+            permissoes.push("aprovarProcesso");
+            permissoes.push("dashboardFuncionario");
+            break;
+    }
+    return permissoes;
 };
 
 export const isAuthenticated = () => {
