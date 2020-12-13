@@ -2,10 +2,51 @@ import React from 'react';
 import 'bulma/css/bulma.css'
 import { getUsuName, logout} from '../util/login';
 import Page from './Page';
+import {getUrlServer} from '../util/env';
+import {getToken} from '../util/login';
 
 let firstName = getUsuName() ? (getUsuName().trim().split(" "))[0] : '';
 class Dashboard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            turmaCount: 0,
+            alunoCount: 0,
+            processosCount: 0,
+            cursosCount: 0,
+        }
+    }
+
+    componentWillMount = () => {
+        this.getCounts("curso/total", "cursosCount");
+        this.getCounts("aluno/total", "alunoCount");
+        this.getCounts("turma/total", "turmaCount");
+        this.getCounts("solicitacao/total", "processosCount");
+        console.log(this.state)
+    }
+
+    getCounts = (url, stateName) => {
+        fetch(getUrlServer() + url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization': getToken()
+            }
+        })
+            .then(response => response.json())
+            .then((data) => {
+                let copyState = this.state;
+                copyState[stateName] = data.total;
+                this.setState(copyState);
+            })
+            .catch(function (error) {
+                console.log('Ocorreu um erro ao realizar a requisição '+ url + ': ' + error.message);
+            });
+    }
+
     render() {
+        const { cursosCount, alunoCount, turmaCount, processosCount } = this.state
         return (
             <div className="columns">
                 <div className="column  is-centered" style={{marginTop: '10px'}}>
@@ -25,25 +66,25 @@ class Dashboard extends React.Component {
                         <div className="tile is-ancestor has-text-centered">
                             <div className="tile is-parent">
                                 <article className="tile is-child box">
-                                    <p className="title">439k</p>
+                                    <p className="title">{alunoCount}</p>
                                     <p className="subtitle">Usuários</p>
                                 </article>
                             </div>
                             <div className="tile is-parent">
                                 <article className="tile is-child box">
-                                    <p className="title">59k</p>
-                                    <p className="subtitle">Processos</p>
+                                    <p className="title">{processosCount}</p>
+                                    <p className="subtitle">Processos em andamento</p>
                                 </article>
                             </div>
                             <div className="tile is-parent">
                                 <article className="tile is-child box">
-                                    <p className="title">3.4k</p>
+                                    <p className="title">{cursosCount}</p>
                                     <p className="subtitle">Cursos</p>
                                 </article>
                             </div>
                             <div className="tile is-parent">
                                 <article className="tile is-child box">
-                                    <p className="title">19</p>
+                                    <p className="title">{turmaCount}</p>
                                     <p className="subtitle">Turmas</p>
                                 </article>
                             </div>
