@@ -64,7 +64,30 @@ export const getUsuPermissoes = () => {
             permissoes.push("solicitarProcesso");
             permissoes.push("dashboardAluno");
             break;
-        default:
+        case "Coordenador" || "Administrador":
+            permissoes.push("aprovacaoCoordenador");
+            permissoes.push("crudFuncionario");
+            permissoes.push("crudAluno");
+            permissoes.push("crudTurma");
+            permissoes.push("crudCursos");
+            permissoes.push("relatorios");
+            permissoes.push("visualizarProcessos");
+            permissoes.push("aprovarProcesso");
+            permissoes.push("dashboardFuncionario");
+            break;
+        case "Secretaria" || "Administrador":
+            permissoes.push("aprovacaoSecretaria");
+            permissoes.push("crudFuncionario");
+            permissoes.push("crudAluno");
+            permissoes.push("crudTurma");
+            permissoes.push("crudCursos");
+            permissoes.push("relatorios");
+            permissoes.push("visualizarProcessos");
+            permissoes.push("aprovarProcesso");
+            permissoes.push("dashboardFuncionario");
+            break;
+        case "Assistente" || "Administrador":
+            permissoes.push("aprovacaoAssistente");
             permissoes.push("crudFuncionario");
             permissoes.push("crudAluno");
             permissoes.push("crudTurma");

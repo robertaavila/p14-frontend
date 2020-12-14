@@ -3,6 +3,8 @@ import './App.css';
 import { Auth } from './components/Login';
 import { ConfirmacaoAcesso } from './components/ConfirmacaoAcesso';
 import { ConfirmacaoPrimeiroAcesso } from './components/ConfirmacaoPrimeiroAcesso';
+import SolicitacoesDoAluno from './components/SolicitacoesDoAluno';
+import Solicitacoes from './components/Solicitacoes';
 import { AlterarSenha } from './components/AlterarSenha';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated, getUsuPermissoes } from './util/login';
@@ -96,14 +98,14 @@ const Routes = () => (
               permissoes.indexOf("visualizarProcessos") > -1 ?
               (<PrivateRoute 
                 path="/processo-validacao" 
-                component={() => <ValidationForm /> } />) : ''
+                component={() => <Solicitacoes /> } />) : ''
           }
 
           {
               permissoes.indexOf("visualizarSomenteMeusProcessos") > -1 ?
               (<PrivateRoute 
                 path="/minhas-validacoes" 
-                component={() => <ValidationForm /> } />) : ''
+                component={() => <SolicitacoesDoAluno /> } />) : ''
           }
 
           {

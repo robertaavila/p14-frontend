@@ -4,6 +4,8 @@ import { getUsuName, logout} from '../util/login';
 import Page from './Page';
 import {getUrlServer} from '../util/env';
 import {getToken} from '../util/login';
+import {formatDate} from '../util/date';
+import {getSeverityColorFromStatus, shortString} from '../util/style';
 
 let firstName = getUsuName() ? (getUsuName().trim().split(" "))[0] : '';
 class Dashboard extends React.Component {
@@ -14,6 +16,7 @@ class Dashboard extends React.Component {
             alunoCount: 0,
             processosCount: 0,
             cursosCount: 0,
+            list_solicitacao: []
         }
     }
 
@@ -22,7 +25,69 @@ class Dashboard extends React.Component {
         this.getCounts("aluno/total", "alunoCount");
         this.getCounts("turma/total", "turmaCount");
         this.getCounts("solicitacao/total", "processosCount");
-        console.log(this.state)
+        this.getSolicitacoes();
+    }
+
+    getSolicitacoes = () => {
+        fetch(getUrlServer() + "solicitacao/", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization': getToken()
+            }
+        })
+        .then(response => response.json())
+        .then((data) => {
+            let copyState = this.state;
+            let total = data.length;
+            if (data.length > 3) total = 3;
+            let new_list_solicitacao = [];
+            for (let i = 0; i < total; i++) {
+                new_list_solicitacao.push(data[i]);
+            }
+            copyState.list_solicitacao = new_list_solicitacao;
+            this.setState(copyState);
+        })
+        .catch(function(error) {
+            console.log('Ocorreu um erro ao realizar a requisição: ' + error.message);
+        });
+    }
+
+    renderTable = () => {
+        console.log(this.state.list_solicitacao);
+        return this.state.list_solicitacao.map((curso, i) => {
+            const { id_solicitacao_validacao, carga_horaria, data_hora_atualizacao, requerer_documento } = curso;
+            let data_atualizacao = formatDate(new Date(data_hora_atualizacao));
+            let status = curso["status_solicitacao.status_solicitacao"];
+            let usuNome = curso["usuario.nome"];
+            let severityColor = getSeverityColorFromStatus(status);
+            let atividade = curso["tipo_atividade_complementar.nome"];
+            return (
+                <tr>
+                    <td>{id_solicitacao_validacao}</td>
+                    <td>{shortString(usuNome)}</td>
+                    <td>{shortString(atividade)}</td>
+                    <td>{data_atualizacao}</td>
+                    <td>
+                         {
+                            requerer_documento == 'S' ?
+                            (<span class="tag is-white is-success">
+                                SIM
+                             </span>) :
+                            (<span class="tag is-white is-danger">
+                                NÃO
+                            </span>)
+                        }
+                    </td>
+                    <td>
+                        <span class="tag is-white" style={{background: severityColor, color: 'white'}}>
+                            {status.toUpperCase()}
+                        </span>
+                    </td>
+                </tr>
+            );
+        });
     }
 
     getCounts = (url, stateName) => {
@@ -106,56 +171,32 @@ class Dashboard extends React.Component {
                                 <div className="card-table">
                                     <div className="content">
                                         <table className="table is-fullwidth is-striped is-hoverable">
-                                            <tbody>
-                                            <tr>
-                                                <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                                <td>Processo 2</td>
-                                                <td>Status: em análise</td>
-                                                <td>Turma: 2019/1</td>
-                                                <td className="level-right"><a
-                                                    className="button is-small is-primary" href="#">Abrir</a>
-                                                </td>
+                                        <thead>
+                                        <tr>
+                                                <th>ID</th>
+                                                <th>Aluno</th>
+                                                <th>Tipo de atividade</th>
+                                                <th>Última atualização</th>
+                                                <th>Atividade do SENAI</th>
+                                                <th>Status</th>
                                             </tr>
-                                            <tr>
-                                                <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                                <td>Processo 2</td>
-                                                <td>Status: em análise</td>
-                                                <td>Turma: 2018/1</td>
-                                                <td className="level-right"><a
-                                                    className="button is-small is-primary" href="#">Abrir</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                                <td>Processo 2</td>
-                                                <td>Status: em análise</td>
-                                                <td>Turma: 2020/1</td>
-                                                <td className="level-right"><a
-                                                    className="button is-small is-primary" href="#">Abrir</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                                <td>Processo 2</td>
-                                                <td>Status: em análise</td>
-                                                <td>Turma: 2018/1</td>
-                                                <td className="level-right"><a
-                                                    className="button is-small is-primary" href="#">Abrir</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td width="5%"><i className="fa fa-bell-o"></i></td>
-                                                <td>Processo 2</td>
-                                                <td>Status: em análise</td>
-                                                <td>Turma: 2020/1</td>
-                                                <td className="level-right"><a
-                                                    className="button is-small is-primary" href="#">Abrir</a>
-                                                </td>
-                                            </tr>
-                                            </tbody>
+                                        </thead>
+                                        <tbody>
+                                        {
+                                            this.state.list_solicitacao.length > 0 ?
+                                            (
+                                                this.renderTable()
+                                            ) :
+                                            (
+                                                <tr>
+                                                <td colSpan="6">Nada encontrado</td>
+                                                </tr>
+                                            )
+                                        }
+                                        </tbody>
                                         </table>
                                         <footer className="card-footer">
-                                            <a href="#" className="card-footer-item">Ver todos</a>
+                                            <a href="/processo-validacao" className="card-footer-item">Ver todos</a>
                                         </footer>
                                     </div>
                                 </div>
