@@ -193,10 +193,11 @@ export default class StepsValidation extends React.Component {
             const usuarioNome = log["usuario.nome"];
             let dataHoraAtualizacaoFormatada = data_hora_atualizacao != '' && data_hora_atualizacao != null ? formatDate(new Date(data_hora_atualizacao)) : '';
             let retorno = (<p></p>);
-            if (nomeStatus == 'Processo reprovado') {
+            
+            if (nomeStatus == 'Processo reprovado' && usuarioNome != '' && usuarioNome != null) {
                 reprovou = true;
             }
-            else if(nomeStatus == 'Processo aprovado') {
+            else if(nomeStatus == 'Processo aprovado' && usuarioNome != '' && usuarioNome != null) {
                 aprovou = true;
             }
             let getIcon = (indice_total, indice_atual) => {
@@ -241,7 +242,7 @@ export default class StepsValidation extends React.Component {
                     </TimelineEvent>
                 );
             }
-            else if (linha_do_tempo == 'PASSADO' && (!aprovou || !reprovou)){
+            else if (linha_do_tempo == 'PASSADO' && (!aprovou && nomeStatus != 'Processo aprovado' || !reprovou && nomeStatus != 'Processo reprovado')){
                 etapas.push(nomeStatus);
                 retorno = (
                     <TimelineEvent
