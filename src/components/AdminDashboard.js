@@ -156,7 +156,7 @@ class Dashboard extends React.Component {
                         </div>
                     </section>
                     <div className="columns">
-                        <div className="column is-6">
+                        <div className="column is-12">
                             <div className="card events-card">
                                 <header className="card-header">
                                     <p className="card-header-title">
@@ -168,7 +168,7 @@ class Dashboard extends React.Component {
                                     </span>
                                     </a>
                                 </header>
-                                <div className="card-table">
+                                <div className="card-table table__wrapper">
                                     <div className="content">
                                         <table className="table is-fullwidth is-striped is-hoverable">
                                         <thead>
@@ -198,64 +198,6 @@ class Dashboard extends React.Component {
                                         <footer className="card-footer">
                                             <a href="/processo-validacao" className="card-footer-item">Ver todos</a>
                                         </footer>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="column is-6">
-                            <div className="card mb-3">
-                                <header className="card-header">
-                                    <p className="card-header-title">
-                                        Buscar turma
-                                    </p>
-                                    <a href="#" className="card-header-icon" aria-label="more options">
-                                    <span className="icon">
-                                        <i className="fa fa-angle-down" aria-hidden="true"></i>
-                                    </span>
-                                    </a>
-                                </header>
-                                <div className="card-content pb-1">
-                                    <div className="content">
-                                        <div className="control has-icons-left has-icons-right">
-                                            <input className="input is-half" type="text"
-                                                    placeholder=""></input>
-                                            <button className="button is-small is-info validate mt-2">Buscar
-                                            </button>
-                                            <span className="icon is-medium is-left">
-                                                <i className="fa fa-search"></i>
-                                            </span>
-                                            <span className="icon is-medium is-right">
-                                                <i className="fa fa-check"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="card">
-                                <header className="card-header">
-                                    <p className="card-header-title">
-                                        Buscar usuário
-                                    </p>
-                                    <a href="#" className="card-header-icon" aria-label="more options">
-                                    <span className="icon">
-                                        <i className="fa fa-angle-down" aria-hidden="true"></i>
-                                    </span>
-                                    </a>
-                                </header>
-                                <div className="card-content pb-1">
-                                    <div className="content">
-                                        <div className="control has-icons-left has-icons-right">
-                                            <input className="input" type="text"
-                                                   placeholder=""></input>
-                                            <button className="button is-small is-info validate mt-2">Buscar
-                                            </button>
-                                            <span className="icon is-medium is-left">
-                                                    <i className="fa fa-search"></i>
-                                            </span>
-                                            <span className="icon is-medium is-right">
-                                                <i className="fa fa-check"></i>
-                                            </span>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

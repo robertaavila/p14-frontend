@@ -9,7 +9,9 @@ import {getToken, getUsuId} from '../util/login';
 
 class Dashboard extends React.Component {
     state = {
-        list_solicitacao: []
+        list_solicitacao: [],
+        total_validado: 0,
+        horas_validar: 60
     }
     componentWillMount = () => {
         fetch(getUrlServer() + "solicitacao/" + getUsuId(), {
@@ -34,6 +36,30 @@ class Dashboard extends React.Component {
         })
         .catch(function(error) {
             console.log('Ocorreu um erro ao realizar a requisição: ' + error.message);
+        });
+        this.getCountTotalValidado();
+    }
+    getCountTotalValidado = () => {
+        let url = getUrlServer() + "aluno/total-validado/" + getUsuId();
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization': getToken()
+            }
+        })
+        .then(response => response.json())
+        .then((data) => {
+            let copyState = this.state;
+            let total = parseInt(data.total);
+            let horas_validar = copyState.horas_validar - total;
+            copyState['total_validado'] = total;
+            copyState['horas_validar'] = (horas_validar < 0 ? 0 : horas_validar);
+            this.setState(copyState);
+        })
+        .catch(function (error) {
+            console.log('Ocorreu um erro ao realizar a requisição '+ url + ': ' + error.message);
         });
     }
     renderTable = () => {
@@ -90,13 +116,13 @@ class Dashboard extends React.Component {
                     <div className="tile is-parent is-half">
                         <article className="tile is-child notification">
                             <p className="title">Horas validadas:</p>
-                            <p className="subtitle">Mostrar número</p>
+                            <p className="subtitle">{this.state.total_validado}</p>
                         </article>
                     </div>
                     <div className="tile is-parent is-half">
                         <article className="tile is-child notification">
                             <p className="title">Horas a validar:</p>
-                            <p className="subtitle">Mostrar número</p>
+                            <p className="subtitle">{this.state.horas_validar}</p>
                         </article>
                     </div>
                 </div>
@@ -130,12 +156,12 @@ class Dashboard extends React.Component {
                                         ) :
                                         (
                                             <tr>
-                                            <td colSpan="5">Nada encontrado</td>
+                                            <td colSpan="6">Nada encontrado</td>
                                             </tr>
                                         )
                                     }
                                      <tr>
-                                        <td colSpan="5">
+                                        <td colSpan="6">
                                             <a href="/minhas-validacoes">Mais detalhes</a>
                                         </td>
                                     </tr>

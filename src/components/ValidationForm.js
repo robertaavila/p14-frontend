@@ -28,6 +28,7 @@ class Form extends React.Component {
             observacoes: '',
             id_modalidade: '',
             atividades_da_modalidade: [],
+            list_tipo_atividade_por_id: [],
             validator: {
                 id_modalidade: '',
                 id_tipo_atividade_complementar: '',
@@ -40,7 +41,11 @@ class Form extends React.Component {
             response: '',
             success: false,
             formulario: true,
-            selectedFile: ''
+            selectedFile: '',
+            documentacao_exigida: '',
+            maximo_total: 0,
+            maximo_por_validacao: 0,
+            observacao_sobre_carga_horaria: ''
         }
     }
 
@@ -126,6 +131,7 @@ class Form extends React.Component {
             })
             .then(response => response.json())
             .then((data) => {
+                let erro = false;
                 let copyState = this.state;
                 if (typeof data.errors != 'undefined') {
                     copyState.response = data.errors[0]["msg"];
@@ -135,7 +141,7 @@ class Form extends React.Component {
                     copyState.response = data.error;
                     copyState.success = false;
                 }
-
+                this.setState(copyState);
                 if (typeof data.solicitacao != 'undefined') {
                     if (state.requerer_documento == "N") {
                         const formData = new FormData(); 
@@ -190,7 +196,6 @@ class Form extends React.Component {
                 this.setState(copyState);
             });
         }
-
         this.setState(state);
     }
     componentWillMount = () => {
@@ -227,9 +232,48 @@ class Form extends React.Component {
             validator: validator
         });
         if (e.target.name == "id_modalidade") {
+            let validator = this.state.validator;
+            validator.carga_horaria = '';
             this.setState({
-                atividades_da_modalidade: (typeof this.state.atividades[parseInt(e.target.value)] != 'undefined') ? this.state.atividades[parseInt(e.target.value)] : this.state.atividades_da_modalidade
+                atividades_da_modalidade: (typeof this.state.atividades[parseInt(e.target.value)] != 'undefined') ? this.state.atividades[parseInt(e.target.value)] : this.state.atividades_da_modalidade,
+                documentacao_exigida: '',
+                maximo_total: 0,
+                maximo_por_validacao: 0,
+                validator: validator,
+                observacao_sobre_carga_horaria: ''
             });
+        }
+        if (e.target.name == "id_tipo_atividade_complementar") {
+            let list_tipo_atividade_por_id = this.state.list_tipo_atividade_por_id;
+            let obj = list_tipo_atividade_por_id["atv_" + e.target.value];
+            
+            if (typeof obj != 'undefined') {
+                let validator = this.state.validator;
+                validator.carga_horaria = '';
+                this.setState({
+                    documentacao_exigida: obj.documentacao_exigida,
+                    observacao_sobre_carga_horaria: obj.observacao_sobre_carga_horaria,
+                    maximo_total: obj.maximo_total,
+                    maximo_por_validacao: obj.maximo_por_validacao,
+                    validator: validator
+                });
+            }
+        }
+        if (e.target.name == 'carga_horaria') {
+            let valorInformado = parseInt(e.target.value);
+            let maximoDaAtividade = parseInt(this.state.maximo_por_validacao);
+            if (typeof maximoDaAtividade != 'number' || maximoDaAtividade == 0) {
+                maximoDaAtividade = parseInt(this.state.maximo_total);
+            }
+
+            if ((valorInformado > maximoDaAtividade) && maximoDaAtividade != 0) {
+                let validator = this.state.validator;
+                validator.carga_horaria = `A carga horária máxima da atividade selecionada é de ${maximoDaAtividade} horas! Ajustamos o valor de ${valorInformado} para ${maximoDaAtividade}.`;
+                this.setState({
+                    validator: validator,
+                    carga_horaria: maximoDaAtividade
+                });
+            }
         }
     }
 
@@ -243,6 +287,10 @@ class Form extends React.Component {
     }
 
     onFileChange = (e) => { 
+        if (typeof e.target.files[0] == 'undefined') {
+            this.setState({ selectedFile: '', certificado_digital: 'Selecione um arquivo' });     
+            return;
+        }
         this.setState({ selectedFile: e.target.files[0], certificado_digital: e.target.files[0].name }); 
     }
 
@@ -259,14 +307,17 @@ class Form extends React.Component {
         .then((data) => {
             let copyState = this.state;
             let atividades = [];
+            let list_tipo_atividade_por_id = [];
             for(let i = 0; i < data.length; i++) {
                 if (typeof atividades[data[i]["id_modalidade"]] == 'undefined') {
                     atividades[data[i]["id_modalidade"]] = [];
                 }
                 atividades[data[i]["id_modalidade"]].push(data[i]);
+                list_tipo_atividade_por_id["atv_" + data[i]["id_tipo_atividade_complementar"]] = data[i];
             }
             copyState.atividades = atividades;
             copyState.atividades_da_modalidade = data;
+            copyState.list_tipo_atividade_por_id = list_tipo_atividade_por_id;
             this.setState(copyState);
         })
         .catch(function (error) {
@@ -293,7 +344,7 @@ class Form extends React.Component {
         });
     }
     render() {
-        const { atividades, modalidades } = this.state;
+        const { atividades, modalidades, observacao_sobre_carga_horaria, documentacao_exigida } = this.state;
 
         return (
             <div>
@@ -422,6 +473,10 @@ class Form extends React.Component {
                                                                 this.state.validator.certificado_digital != '' ?
                                                                 (<p className="help is-danger">{this.state.validator.certificado_digital}</p>) : ''
                                                             }
+                                                            {
+                                                                documentacao_exigida != '' ?
+                                                                (<p className="help is-info">Documentação exigida: <b>{documentacao_exigida}</b></p>) : ''
+                                                            }
                                                         </div>
                                                         <div className="field">
                                                             <div className="control mt-2">
@@ -464,6 +519,10 @@ class Form extends React.Component {
                                                 {
                                                     this.state.validator.carga_horaria != '' ?
                                                     (<p className="help is-danger">{this.state.validator.carga_horaria}</p>) : ''
+                                                }
+                                                {
+                                                    observacao_sobre_carga_horaria != '' && observacao_sobre_carga_horaria != null ?
+                                                    (<p className="help is-info">Carga horária: <b>{observacao_sobre_carga_horaria}</b></p>) : ''
                                                 }
                                             </div>
                                             <div className="container">

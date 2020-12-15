@@ -120,14 +120,6 @@ class ConteudoSolicitacoes extends React.Component {
                     <td>{carga_horaria}</td>
                     <td>{data_atualizacao}</td>
                     <td>
-                    {
-                        certificado_digital != null ?
-                        (<button className="button is-success is-rounded is-inverted" onClick={() => this.downloadFile(certificado_digital)}><span className="icon is-small"><i className="fas fa-cloud-download-alt"></i></span></button>) :
-                        ('')
-                    }
-                    </td>
-                    <td>{shortString(emissor_certificado)}</td>
-                    <td>
                         {
                             requerer_documento == 'S' ?
                             (<span class="tag is-white is-success">
@@ -189,8 +181,6 @@ class ConteudoSolicitacoes extends React.Component {
                                             <th>Observações</th>
                                             <th>Carga horária</th>
                                             <th>Última atualização</th>
-                                            <th>Certificado</th>
-                                            <th>Emissor do Certificado</th>
                                             <th>Atividade do SENAI</th>
                                             <th>Status</th>
                                             <th></th>
@@ -204,7 +194,7 @@ class ConteudoSolicitacoes extends React.Component {
                                         ) :
                                         (
                                             <tr>
-                                            <td colSpan="4">Nada encontrado</td>
+                                            <td colSpan="9">Nada encontrado</td>
                                             </tr>
                                         )
                                     }

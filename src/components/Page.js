@@ -90,13 +90,6 @@ export default class Page extends React.Component {
                                     </a>) : ''
                                 }
                                 {
-                                    getUsuPermissoes().indexOf("relatorios") > -1 ?
-                                    (<a id="relatorios" className="navbar-item" href="/relatorios">
-                                        <span class="icon is-small"><i class="fas fa-chart-area"></i></span> 
-                                        &nbsp; Relatórios
-                                    </a>) : ''
-                                }
-                                {
                                     getUsuPermissoes().indexOf("visualizarProcessos") > -1 ?
                                     (<a id="processo-validacao" className="navbar-item" href="/processo-validacao">
                                         <span class="icon is-small"><i class="fas fa-file-alt"></i></span> 

@@ -4,6 +4,7 @@ import {Timeline, TimelineEvent} from 'react-event-timeline';
 import {getUrlServer} from '../util/env';
 import {getToken, getUsuId, getUsuPermissoes} from '../util/login';
 import { formatDate } from '../util/date';
+import {generateSecret} from '../util/hash';
 
 export default class StepsValidation extends React.Component {
     state = {
@@ -19,11 +20,18 @@ export default class StepsValidation extends React.Component {
         observacoes: '',
         idSolicitacao: '',
         idNovoStatus: '',
+        selectedFile: '',
+        certificado_digital: 'Selecione um arquivo',
         validator: {
             observacoes: ''
         },
         processoConcluido: this.solicitacao && this.solicitacao['status_solicitacao.status_solicitacao'] == 'Processo concluído',
-        informarObservacoes: false
+        informarObservacoes: false,
+        arquivo: {
+            sucesso: false,
+            response: '',
+            enviando: false
+        }
     };
 
     componentWillMount = () => {
@@ -32,6 +40,98 @@ export default class StepsValidation extends React.Component {
         this.getStatus();
     }
 
+    onFileChange = (e) => { 
+        if (typeof e.target.files[0] == 'undefined') {
+            this.setState({ selectedFile: '', certificado_digital: 'Selecione um arquivo' });     
+            return;
+        }
+        this.setState({ selectedFile: e.target.files[0], certificado_digital: e.target.files[0].name }); 
+    }
+
+    enviaArquivo = () => {
+        let copyState = this.state;
+        copyState.arquivo.enviando = true;
+        this.setState(copyState);
+        const formData = new FormData(); 
+        let novoNomeArquivo = getUsuId() + "_" + generateSecret() + "_" + this.state.certificado_digital;
+        formData.append("arquivo", this.state.selectedFile, novoNomeArquivo); 
+        fetch(getUrlServer() + "solicitacao/documento", {
+            method: 'POST',
+            headers: {
+                'authorization': getToken(),
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then((data_document) => {
+            if (typeof data_document.status == 'undefined') {
+                copyState.arquivo.success = false;
+                copyState.arquivo.enviando = false;
+                copyState.arquivo.response = "Ocorreu um erro ao tentar enviar o arquivo! Tente novamente mais tarde!";
+            }
+            else if(data_document.status > 200) {
+                copyState.arquivo.success = false;
+                copyState.arquivo.enviando = false;
+                copyState.arquivo.response = data_document.message;
+            }
+            else {
+                copyState.arquivo.success = true;
+                copyState.arquivo.response = "Documento anexado!";
+                setTimeout(() => {
+                    copyState.arquivo.success = false;
+                    copyState.arquivo.response = "";
+                    copyState.solicitacao.certificado_digital = novoNomeArquivo;
+                    this.setState(copyState);        
+                }, 1200);
+
+                fetch(getUrlServer() + "solicitacao/", {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'authorization': getToken()
+                    },
+                    body: JSON.stringify(
+                        {
+                            observacoes: this.state.observacoes,
+                            id_usuario: this.state.solicitacao.id_usuario, 
+                            id_status_solicitacao: this.state.solicitacao.id_status_solicitacao,
+                            id_solicitacao_validacao: this.state.solicitacao.id_solicitacao_validacao,
+                            certificado_digital: novoNomeArquivo,
+                            emissor_certificado: 'SENAI'
+                        }
+                    )
+                })
+                .then(response => response.json())
+                .then((data) => {
+                    if (typeof data.errors != 'undefined') {
+                        copyState.arquivo.success = false;
+                        copyState.arquivo.response = data.errors[0].msg;
+                        alert(data.errors[0].msg)
+                        return;
+                    }
+                    if (typeof data.error != 'undefined') {
+                        copyState.arquivo.success = false;
+                        copyState.arquivo.response = data.error;
+                        return;
+                    }
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+            }
+            this.setState(copyState);
+   
+        })
+        .catch(function (error) {
+            let copyState = this.state;
+            copyState.success = false;
+            copyState.formulario = false;
+            copyState.arquivo.enviando = false;
+            copyState.response = "Ocorreu um erro ao tentar solicitar validação! Tente novamente mais tarde!";
+            this.setState(copyState);
+        });
+    }
     getLog = () => {
         fetch(getUrlServer() + "log-solicitacao-status/" + this.state.id_solicitacao_validacao, {
             method: 'GET',
@@ -439,6 +539,79 @@ export default class StepsValidation extends React.Component {
                                                 </span>)
                                             }
                                         </p>
+                                        {
+                                            this.state.funcionario &&
+                                            typeof this.state.solicitacao.requerer_documento != 'undefined' && 
+                                            this.state.solicitacao.requerer_documento == 'S' &&
+                                            (typeof this.state.solicitacao.certificado_digital == 'undefined' || this.state.solicitacao.certificado_digital == null || this.state.solicitacao.certificado_digital == '')? 
+                                            (<p>
+                                                <label className="label">Adicionar documento: </label>
+                                                <div className="file has-name">
+                                                    <label className="file-label">
+                                                        <input 
+                                                            className="file-input"
+                                                            type="file"
+                                                            onChange={this.onFileChange}
+                                                            name="resume"/>
+                                                        <span className="file-cta">
+                                                            <span className="file-icon">
+                                                                <i className="fas fa-upload"></i>
+                                                            </span>
+                                                        </span>
+                                                        <span className="file-name">
+                                                            {this.state.certificado_digital}
+                                                        </span>
+                                                    </label>
+                                                    {
+                                                        this.state.selectedFile != '' ?
+                                                        (<p>
+                                                            {
+                                                                this.state.arquivo.enviando ?
+                                                                (
+                                                                    <button
+                                                                        style={{marginLeft: 15, marginTop: 5}} class="button is-small is-success is-rounded is-disabled">
+                                                                        <span class="icon">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </span>
+                                                                        <span>Salvar</span>
+                                                                    </button>
+                                                                ):
+                                                                (
+                                                                    <button onClick={this.enviaArquivo}
+                                                                        style={{marginLeft: 15, marginTop: 5}} class="button is-small is-success is-rounded">
+                                                                        <span class="icon">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </span>
+                                                                        <span>Salvar</span>
+                                                                    </button>
+                                                                )
+                                                            }
+                                                        </p>) : ''
+                                                    }
+                                                </div>
+                                                {
+                                                    this.state.arquivo.response != null &&
+                                                    this.state.arquivo.response != '' ?
+                                                    (
+                                                        <span style={{fontSize: '14px'}}>
+                                                            {this.state.arquivo.success ? (
+                                                                <p style={{color: 'green'}}>
+                                                                {
+                                                                    this.state.arquivo.response
+                                                                }
+                                                                </p>
+                                                            ) : (
+                                                                <p style={{color: 'red'}}>
+                                                                {
+                                                                    this.state.arquivo.response
+                                                                }
+                                                                </p>
+                                                            )}
+                                                        </span>
+                                                    ) : ''
+                                                }
+                                            </p>) : ''
+                                        }
                                         {
                                             typeof this.state.solicitacao.emissor_certificado != 'undefined' && this.state.solicitacao.emissor_certificado != null ?
                                             (<p><b>Emissor do certificado</b>: {this.state.solicitacao.emissor_certificado}</p>) : ''
