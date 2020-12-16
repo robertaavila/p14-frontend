@@ -58,13 +58,14 @@ export const getUsuIdCurso = () => {
 
 export const getUsuPermissoes = () => {
     let permissoes = [];
+    console.log(window.localStorage.getItem(USU_TIPO_KEY));
     switch (window.localStorage.getItem(USU_TIPO_KEY)) {
         case "Aluno":
             permissoes.push("visualizarSomenteMeusProcessos");
             permissoes.push("solicitarProcesso");
             permissoes.push("dashboardAluno");
             break;
-        case "Coordenador" || "Administrador":
+        case "Coordenador":
             permissoes.push("aprovacaoCoordenador");
             permissoes.push("crudFuncionario");
             permissoes.push("crudAluno");
@@ -75,7 +76,22 @@ export const getUsuPermissoes = () => {
             permissoes.push("aprovarProcesso");
             permissoes.push("dashboardFuncionario");
             break;
-        case "Secretaria" || "Administrador":
+        case "Administrador":
+            permissoes.push("visualizarSomenteMeusProcessos");
+            permissoes.push("solicitarProcesso");
+            permissoes.push("aprovacaoCoordenador");
+            permissoes.push("aprovacaoSecretaria");
+            permissoes.push("aprovacaoAssistente");
+            permissoes.push("crudFuncionario");
+            permissoes.push("crudAluno");
+            permissoes.push("crudTurma");
+            permissoes.push("crudCursos");
+            permissoes.push("relatorios");
+            permissoes.push("visualizarProcessos");
+            permissoes.push("aprovarProcesso");
+            permissoes.push("dashboardFuncionario");
+            break;
+        case "Secretaria":
             permissoes.push("aprovacaoSecretaria");
             permissoes.push("crudFuncionario");
             permissoes.push("crudAluno");
@@ -86,7 +102,7 @@ export const getUsuPermissoes = () => {
             permissoes.push("aprovarProcesso");
             permissoes.push("dashboardFuncionario");
             break;
-        case "Assistente" || "Administrador":
+        case "Assistente":
             permissoes.push("aprovacaoAssistente");
             permissoes.push("crudFuncionario");
             permissoes.push("crudAluno");

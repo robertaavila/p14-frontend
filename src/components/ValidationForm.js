@@ -120,57 +120,63 @@ class Form extends React.Component {
                 novoProcesso.certificado_digital = getUsuId() + "_" + generateSecret() + "_" + state.certificado_digital;
             }
 
-            fetch(getUrlServer() + "solicitacao", {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'authorization': getToken(),
-                },
-                body: JSON.stringify(novoProcesso)
-            })
-            .then(response => response.json())
-            .then((data) => {
-                let erro = false;
-                let copyState = this.state;
-                if (typeof data.errors != 'undefined') {
-                    copyState.response = data.errors[0]["msg"];
-                    copyState.success = false;
-                }
-                else if (typeof data.error != 'undefined' && data.error != '') {
-                    copyState.response = data.error;
-                    copyState.success = false;
-                }
-                this.setState(copyState);
-                if (typeof data.solicitacao != 'undefined') {
-                    if (state.requerer_documento == "N") {
-                        const formData = new FormData(); 
-                        formData.append("arquivo", this.state.selectedFile, novoProcesso.certificado_digital); 
-                        fetch(getUrlServer() + "solicitacao/documento", {
+            let copyState = this.state;
+            if (state.selectedFile != '') {
+                const formData = new FormData(); 
+                formData.append("arquivo", this.state.selectedFile, novoProcesso.certificado_digital); 
+                fetch(getUrlServer() + "solicitacao/documento", {
+                    method: 'POST',
+                    headers: {
+                        'authorization': getToken(),
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then((data_document) => {
+                    if (typeof data_document.status == 'undefined') {
+                        copyState.formulario = true;
+                        copyState.success = false;
+                        copyState.response = "Ocorreu um erro ao tentar solicitar validação! Tente novamente mais tarde!";
+                    }
+                    else if(data_document.status > 200) {
+                        copyState.formulario = true;
+                        copyState.success = false;
+                        copyState.response = data_document.message;
+                    }
+                    else {
+                        fetch(getUrlServer() + "solicitacao", {
                             method: 'POST',
                             headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
                                 'authorization': getToken(),
                             },
-                            body: formData
+                            body: JSON.stringify(novoProcesso)
                         })
                         .then(response => response.json())
-                        .then((data_document) => {
-                            if (typeof data_document.status == 'undefined') {
-                                copyState.formulario = true;
+                        .then((data) => {
+                            if (typeof data.errors != 'undefined') {
+                                copyState.response = data.errors[0]["msg"];
                                 copyState.success = false;
-                                copyState.response = "Ocorreu um erro ao tentar solicitar validação! Tente novamente mais tarde!";
                             }
-                            else if(data_document.status > 200) {
-                                copyState.formulario = true;
+                            else if (typeof data.error != 'undefined' && data.error != '') {
+                                copyState.response = data.error;
                                 copyState.success = false;
-                                copyState.response = data_document.message;
-                            }
-                            else {
-                                copyState.formulario = false;
-                                copyState.success = true;
-                                copyState.response = "Sua solicitação foi enviada! Iremos analisar o documento e as demais informações! Você será notificado por e-mail com o status da sua solicitação!";
                             }
                             
+                            if (typeof data.solicitacao != 'undefined') {
+                                if (state.requerer_documento == "N") {
+                                    copyState.formulario = false;
+                                    copyState.success = true;
+                                    copyState.response = "Sua solicitação foi enviada! Iremos analisar o documento e as demais informações! Você será notificado por e-mail com o status da sua solicitação!";
+                                }
+                                else {
+                                    copyState.formulario = false;
+                                    copyState.success = true;
+                                    copyState.response = "Sua solicitação foi enviada! Iremos verificar a atividade realizada pelo SENAI! Você será notificado por e-mail com o status da sua solicitação!";
+                                }
+                            }
+
                             this.setState(copyState);
                         })
                         .catch(function (error) {
@@ -180,21 +186,61 @@ class Form extends React.Component {
                             copyState.response = "Ocorreu um erro ao tentar solicitar validação! Tente novamente mais tarde!";
                             this.setState(copyState);
                         });
-                    } else {
-                        copyState.formulario = false;
-                        copyState.success = true;
-                        copyState.response = "Sua solicitação foi enviada! Iremos verificar a atividade realizada pelo SENAI! Você será notificado por e-mail com o status da sua solicitação!";
-                        this.setState(copyState);
                     }
-                }
-            })
-            .catch(function (error) {
-                let copyState = this.state;
-                copyState.success = false;
-                copyState.formulario = false;
-                copyState.response = "Ocorreu um erro ao tentar solicitar validação! Tente novamente mais tarde!";
-                this.setState(copyState);
-            });
+                    
+                    this.setState(copyState);
+                })
+                .catch(function (error) {
+                    let copyState = this.state;
+                    copyState.success = false;
+                    copyState.formulario = false;
+                    copyState.response = "Ocorreu um erro ao tentar solicitar validação! Tente novamente mais tarde!";
+                    this.setState(copyState);
+                });
+            } else {
+                fetch(getUrlServer() + "solicitacao", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'authorization': getToken(),
+                    },
+                    body: JSON.stringify(novoProcesso)
+                })
+                .then(response => response.json())
+                .then((data) => {
+                    if (typeof data.errors != 'undefined') {
+                        copyState.response = data.errors[0]["msg"];
+                        copyState.success = false;
+                    }
+                    else if (typeof data.error != 'undefined' && data.error != '') {
+                        copyState.response = data.error;
+                        copyState.success = false;
+                    }
+                    
+                    if (typeof data.solicitacao != 'undefined') {
+                        if (state.requerer_documento == "N") {
+                            copyState.formulario = false;
+                            copyState.success = true;
+                            copyState.response = "Sua solicitação foi enviada! Iremos analisar o documento e as demais informações! Você será notificado por e-mail com o status da sua solicitação!";
+                        }
+                        else {
+                            copyState.formulario = false;
+                            copyState.success = true;
+                            copyState.response = "Sua solicitação foi enviada! Iremos verificar a atividade realizada pelo SENAI! Você será notificado por e-mail com o status da sua solicitação!";
+                        }
+                    }
+
+                    this.setState(copyState);
+                })
+                .catch(function (error) {
+                    let copyState = this.state;
+                    copyState.success = false;
+                    copyState.formulario = false;
+                    copyState.response = "Ocorreu um erro ao tentar solicitar validação! Tente novamente mais tarde!";
+                    this.setState(copyState);
+                });
+            }
         }
         this.setState(state);
     }

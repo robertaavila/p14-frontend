@@ -629,7 +629,7 @@ export default class StepsValidation extends React.Component {
                     <Timeline style={{fontSize: '16px'}}>
                             {
                                 this.state.list_status_disponiveis.length > 0 ?
-                                this.renderTimeline() : (<h3 style={{textAlign: "center", marginTop: "40px"}}>Nada encontrado :/</h3>)
+                                this.renderTimeline() : (<h3 style={{textAlign: "center", marginTop: "40px"}}>Carregando...</h3>)
                             }
                     </Timeline>
                     <div className={`modal ${this.state.informarObservacoes && 'is-active'}`}>
